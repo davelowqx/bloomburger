@@ -7,6 +7,7 @@ export default function Home() {
   const [data, setData] = React.useState([]);
   const [input, setInput] = React.useState("");
   const [symbols, setSymbols] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const incomeStatementMapper = (obj) => {
     return {
@@ -150,11 +151,13 @@ export default function Home() {
       )
     );
     setData(raw);
+    setLoading(false);
   }, [symbols]);
 
   const handleInput = (event) => setInput(event.target.value);
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     setSymbols([...symbols, input]);
     setInput("");
   };
@@ -163,7 +166,7 @@ export default function Home() {
     <div>
       <form onSubmit={handleSubmit}>
         <input value={input} onChange={handleInput} />
-        <button>submit</button>
+        <button disabled={loading}>submit</button>
       </form>
 
       <table>
