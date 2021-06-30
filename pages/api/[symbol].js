@@ -2,7 +2,7 @@
 
 export default async (req, res) => {
   const symbol = req.query.symbol;
-  const modules = req.headers.modules;
+  const modules = req.headers.modules || "price";
   try {
     const data = await fetch(
       `http://query2.finance.yahoo.com/v10/finance/quoteSummary/${symbol}?modules=${modules}`
