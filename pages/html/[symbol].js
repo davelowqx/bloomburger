@@ -30,21 +30,28 @@ export async function getServerSideProps(context) {
   };
 
   const symbol = context.query.symbol;
-  const data = await fetch(`/api/${symbol}`, {
-    headers: {
-      modules: [
-        "price",
-        "summaryProfile",
-        "incomeStatementHistory",
-        "incomeStatementHistoryQuarterly",
-        "cashflowStatementHistory",
-        "cashflowStatementHistoryQuarterly",
-        "balanceSheetHistory",
-        "balanceSheetHistoryQuarterly",
-        "summaryProfile",
-      ],
-    },
-  })
+  const data = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://bloomburger.vercel.app"
+    }/api/${symbol}`,
+    {
+      headers: {
+        modules: [
+          "price",
+          "summaryProfile",
+          "incomeStatementHistory",
+          "incomeStatementHistoryQuarterly",
+          "cashflowStatementHistory",
+          "cashflowStatementHistoryQuarterly",
+          "balanceSheetHistory",
+          "balanceSheetHistoryQuarterly",
+          "summaryProfile",
+        ],
+      },
+    }
+  )
     .then((res) => res.json())
     .then((json) => {
       const { result, error } = json.data.quoteSummary;
