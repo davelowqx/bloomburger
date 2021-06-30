@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import React from "react";
-import { Button, Alert, Form } from "react-bootstrap";
+import { Button, Alert, Form, Row, Col } from "react-bootstrap";
 import BTable from "react-bootstrap/Table";
 import { useTable, useSortBy } from "react-table";
 import styles from "../styles/Home.module.css";
@@ -82,20 +82,25 @@ export default function Home() {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <Form.Group>
-          <Form.Control
-            value={input}
-            type="text"
-            placeholder="Symbol"
-            disabled={loading}
-            onChange={handleInput}
-          />
-        </Form.Group>
-        <Button disabled={loading}>submit</Button>
+        <Row>
+          <Col>
+            <Form.Control
+              value={input}
+              type="text"
+              placeholder="Symbol"
+              disabled={loading}
+              onChange={handleInput}
+            />
+          </Col>
+          <Col>
+            <Button disabled={loading}>submit</Button>
+          </Col>
+        </Row>
         <Alert variant="danger" show={!!error}>
           {error}
         </Alert>
       </Form>
+      <br />
       <Table columns={columns} data={data} />
     </div>
   );
@@ -143,9 +148,9 @@ const fetchData = async (symbol) => {
           marketCap: price.marketCap.raw,
           ...incomeStatementHistory.incomeStatementHistory
             .map(incomeStatementMapper)
-            .map((obj, i) => flatten(obj, i))
-            .reduce(arrToObj),
-          ...flatten(
+            .map((obj, i) => addSuffix(obj, i))
+            .reduce(arrToObjReducer),
+          ...addSuffix(
             incomeStatementHistoryQuarterly.incomeStatementHistory
               .map(incomeStatementMapper)
               .reduce(sum),
@@ -153,9 +158,9 @@ const fetchData = async (symbol) => {
           ),
           ...cashflowStatementHistory.cashflowStatements
             .map(cashFlowStatementMapper)
-            .map((obj, i) => flatten(obj, i))
-            .reduce(arrToObj),
-          ...flatten(
+            .map((obj, i) => addSuffix(obj, i))
+            .reduce(arrToObjReducer),
+          ...addSuffix(
             cashflowStatementHistoryQuarterly.cashflowStatements
               .map(cashFlowStatementMapper)
               .reduce(sum),
@@ -180,19 +185,19 @@ const sum = (accum, curr) => {
   return accum;
 };
 
-const arrToObj = (accum, curr) => {
+const arrToObjReducer = (accum, curr) => {
   for (let key in curr) {
     accum[key] = curr[key];
   }
   return accum;
 };
 
-const flatten = (obj, suffix) => {
-  const flattened = {};
+const addSuffix = (obj, suffix) => {
+  const suffixed = {};
   for (let key in obj) {
-    flattened[`${key}${suffix}`] = obj[key];
+    suffixed[`${key}${suffix}`] = obj[key];
   }
-  return flattened;
+  return suffixed;
 };
 
 const incomeStatementMapper = (obj) => {
