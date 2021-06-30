@@ -110,23 +110,23 @@ export default function Home() {
               } = result[0];
 
               return {
-                [symbol.toUpperCase()]: {
-                  marketCap: price.marketCap.raw,
-                  industry: summaryProfile.industry,
-                  sector: summaryProfile.sector,
-                  name: price.longName,
-                  /*
+                symbol: symbol.toUpperCase(),
+                name: price.longName,
+                sector: summaryProfile.sector,
+                industry: summaryProfile.industry,
+                marketCap: price.marketCap.raw,
+                /*
                   incomeStatementHistory:
                     incomeStatementHistory.incomeStatementHistory.map(
                       incomeStatementMapper
                     ),
                     */
-                  incomeStatementHistoryTTM:
-                    incomeStatementHistoryQuarterly.incomeStatementHistory
-                      .map(incomeStatementMapper)
-                      .reduce(incomeStatementReducer),
+                incomeStatementHistoryTTM:
+                  incomeStatementHistoryQuarterly.incomeStatementHistory
+                    .map(incomeStatementMapper)
+                    .reduce(incomeStatementReducer),
 
-                  /*
+                /*
                   cashflowStatementHistory:
                     cashflowStatementHistory.cashflowStatements.map(
                       cashFlowStatementMapper
@@ -144,7 +144,6 @@ export default function Home() {
                       balanceSheetMapper
                     ),
                       */
-                },
               };
             }
           })
@@ -167,9 +166,62 @@ export default function Home() {
         <button>submit</button>
       </form>
 
-      {data.map((company, i) => (
-        <div key={i}>{JSON.stringify(company)}</div>
-      ))}
+      <table>
+        <tr key={0}>
+          <th>symbol</th>
+          <th>name</th>
+          <th>sector</th>
+          <th>industry</th>
+          <th>marketCap</th>
+          <th>totalRevenueTTM</th>
+          <th>grossProfitTTM</th>
+          <th>researchDevelopmentTTM</th>
+          <th>sellingGeneralAdministrativeTTM</th>
+          <th>totalOtherIncomeExpenseNetTTM</th>
+          <th>operatingIncomeTTM</th>
+          <th>ebitTTM</th>
+          <th>netIncomeTTM</th>
+        </tr>
+        {data.map((company, i) => {
+          const {
+            symbol,
+            name,
+            sector,
+            industry,
+            marketCap,
+            incomeStatementHistoryTTM,
+          } = company;
+          const {} = incomeStatementHistoryTTM;
+
+          const {
+            totalRevenue,
+            grossProfit,
+            researchDevelopment,
+            sellingGeneralAdministrative,
+            totalOtherIncomeExpenseNet,
+            operatingIncome,
+            ebit,
+            netIncome,
+          } = incomeStatementHistoryTTM;
+          return (
+            <tr key={i + 1}>
+              <td>{symbol}</td>
+              <td>{name}</td>
+              <td>{sector}</td>
+              <td>{industry}</td>
+              <td>{marketCap}</td>
+              <td>{totalRevenue}</td>
+              <td>{grossProfit}</td>
+              <td>{researchDevelopment}</td>
+              <td>{sellingGeneralAdministrative}</td>
+              <td>{totalOtherIncomeExpenseNet}</td>
+              <td>{operatingIncome}</td>
+              <td>{ebit}</td>
+              <td>{netIncome}</td>
+            </tr>
+          );
+        })}
+      </table>
     </div>
   );
 }
