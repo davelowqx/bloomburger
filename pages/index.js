@@ -80,7 +80,7 @@ export default function Home() {
   React.useEffect(async () => {
     const raw = await Promise.all(
       symbols.map((symbol) =>
-        fetch(`http://localhost:3000/api/${symbol}`, {
+        fetch(`/api/${symbol}`, {
           headers: {
             modules: [
               "price",

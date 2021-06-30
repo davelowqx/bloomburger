@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
   };
 
   const symbol = context.query.symbol;
-  const data = await fetch(`http://localhost:3000/api/${symbol}`, {
+  const data = await fetch(`/api/${symbol}`, {
     headers: {
       modules: [
         "price",
