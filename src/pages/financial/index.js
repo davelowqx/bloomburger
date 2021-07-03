@@ -1,12 +1,9 @@
-import Head from "next/head";
-import Image from "next/image";
 import React from "react";
 import { Button, Alert, Form, Row, Col } from "react-bootstrap";
 import BTable from "react-bootstrap/Table";
 import { useTable, useSortBy } from "react-table";
-import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Financial() {
   const [data, setData] = React.useState([]);
   const [input, setInput] = React.useState("");
   const [symbols, setSymbols] = React.useState([
@@ -199,28 +196,20 @@ const fetchData = async (symbol) => {
     return ret;
   };
 
-  return fetch(`/api/financial/${symbol}`, {
-    headers: {
-      modules: [
-        "price",
-        "summaryProfile",
-        "incomeStatementHistory",
-        "incomeStatementHistoryQuarterly",
-        "cashflowStatementHistory",
-        "cashflowStatementHistoryQuarterly",
-        "balanceSheetHistoryQuarterly",
-      ],
-    },
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        throw new Error(res);
-      }
-    })
+  const modules = [
+    "price",
+    "summaryProfile",
+    "incomeStatementHistory",
+    "incomeStatementHistoryQuarterly",
+    "cashflowStatementHistory",
+    "cashflowStatementHistoryQuarterly",
+    "balanceSheetHistoryQuarterly",
+  ];
+
+  return fetch(`/v10/finance/quoteSummary/${symbol}?modules=${modules}`)
+    .then((res) => res.json())
     .then((json) => {
-      const { result, error } = json.data.quoteSummary;
+      const { result, error } = json.quoteSummary;
       if (error === null) {
         const {
           price,
