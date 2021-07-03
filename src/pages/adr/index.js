@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Row } from "react-bootstrap";
 
 export default function ADR() {
   const [loading, setLoading] = React.useState(false);
@@ -132,10 +131,12 @@ export default function ADR() {
 }
 
 const fetchData = (symbol) => {
-  return fetch(`/api/chart/${symbol}`)
+  return fetch(
+    `/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=2y`
+  )
     .then((res) => res.json())
     .then((json) => {
-      const { result, error } = json.data.chart;
+      const { result, error } = json.chart;
       if (error === null) {
         const { timestamp, indicators } = result[0];
         return {
