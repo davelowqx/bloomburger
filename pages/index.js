@@ -53,11 +53,12 @@ export default function Home() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (i) => {
     setData([...data.slice(0, i), ...data.slice(i + 1, data.length)]);
   };
 
   const [headers, setHeaders] = React.useState([
+    "delete",
     "symbol",
     "name",
     "sector",
@@ -87,13 +88,21 @@ export default function Home() {
             <Form.Control
               value={input}
               type="text"
+              size="sm"
               placeholder="Symbol"
               disabled={loading}
               onChange={handleInput}
             />
           </Col>
           <Col>
-            <Button disabled={loading}>submit</Button>
+            <Button
+              variant={loading ? "secondary" : "success"}
+              size="sm"
+              disabled={loading}
+              type="submit"
+            >
+              submit
+            </Button>
           </Col>
         </Row>
         <Alert variant="danger" show={!!error}>
@@ -107,7 +116,90 @@ export default function Home() {
 }
 
 const fetchData = async (symbol) => {
-  return fetch(`/api/${symbol}`, {
+  const sum = (accum, curr) => {
+    for (let key in accum) {
+      if (key !== "endDate") {
+        accum[key] += curr[key];
+      }
+    }
+    return accum;
+  };
+
+  const arrToObjReducer = (accum, curr) => {
+    for (let key in curr) {
+      accum[key] = curr[key];
+    }
+    return accum;
+  };
+
+  const addSuffix = (obj, suffix) => {
+    const suffixed = {};
+    for (let key in obj) {
+      suffixed[`${key}${suffix}`] = obj[key];
+    }
+    return suffixed;
+  };
+
+  const getRaw = (obj, field) => {
+    try {
+      return obj[field].raw;
+    } catch {
+      console.log(obj);
+      return "-";
+    }
+  };
+
+  const incomeStatementMapper = (obj) => {
+    const fields = [
+      "endDate",
+      "totalRevenue",
+      "grossProfit",
+      "operatingIncome",
+      "ebit",
+      "netIncome",
+    ];
+    const ret = { endDate: obj.endDate.fmt };
+    fields.forEach((field) => {
+      ret[field] = getRaw(obj, field);
+    });
+    return ret;
+  };
+
+  const cashFlowStatementMapper = (obj) => {
+    const fields = [
+      "endDate",
+      "depreciation",
+      "totalCashFromOperatingActivities",
+      "capitalExpenditures",
+      "investments",
+      "totalCashflowsFromInvestingActivities",
+      "netBorrowings",
+      "totalCashFromFinancingActivities",
+    ];
+    const ret = { endDate: obj.endDate.fmt };
+    fields.forEach((field) => {
+      ret[field] = getRaw(obj, field);
+    });
+    return ret;
+  };
+
+  const balanceSheetMapper = (obj) => {
+    const fields = [
+      "cash",
+      "totalCurrentAssets",
+      "totalAssets",
+      "totalCurrentLiabilities",
+      "totalLiab",
+      "totalStockholderEquity",
+    ];
+    const ret = {};
+    fields.forEach((field) => {
+      ret[field] = getRaw(obj, field);
+    });
+    return ret;
+  };
+
+  return fetch(`/api/financial/${symbol}`, {
     headers: {
       modules: [
         "price",
@@ -176,74 +268,6 @@ const fetchData = async (symbol) => {
     });
 };
 
-const sum = (accum, curr) => {
-  for (let key in accum) {
-    if (key !== "endDate") {
-      accum[key] += curr[key];
-    }
-  }
-  return accum;
-};
-
-const arrToObjReducer = (accum, curr) => {
-  for (let key in curr) {
-    accum[key] = curr[key];
-  }
-  return accum;
-};
-
-const addSuffix = (obj, suffix) => {
-  const suffixed = {};
-  for (let key in obj) {
-    suffixed[`${key}${suffix}`] = obj[key];
-  }
-  return suffixed;
-};
-
-const incomeStatementMapper = (obj) => {
-  const fields = [
-    "endDate",
-    "totalRevenue",
-    "grossProfit",
-    "operatingIncome",
-    "ebit",
-    "netIncome",
-  ];
-  const ret = { endDate: obj.endDate.fmt };
-  fields.forEach((field) => (ret[field] = obj[field].raw));
-  return ret;
-};
-
-const cashFlowStatementMapper = (obj) => {
-  const fields = [
-    "endDate",
-    "depreciation",
-    "totalCashFromOperatingActivities",
-    "capitalExpenditures",
-    "investments",
-    "totalCashflowsFromInvestingActivities",
-    "netBorrowings",
-    "totalCashFromFinancingActivities",
-  ];
-  const ret = { endDate: obj.endDate.fmt };
-  fields.forEach((field) => (ret[field] = obj[field].raw));
-  return ret;
-};
-
-const balanceSheetMapper = (obj) => {
-  const fields = [
-    "cash",
-    "totalCurrentAssets",
-    "totalAssets",
-    "totalCurrentLiabilities",
-    "totalLiab",
-    "totalStockholderEquity",
-  ];
-  const ret = {};
-  fields.forEach((field) => (ret[field] = obj[field].raw));
-  return ret;
-};
-
 function Table({ columns, data }) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
@@ -255,7 +279,7 @@ function Table({ columns, data }) {
     );
   return (
     <>
-      <BTable striped bordered hover size="sm" {...getTableProps()}>
+      <BTable striped bordered responsive size="sm" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, i) => (
             <tr key={i} {...headerGroup.getHeaderGroupProps()}>
