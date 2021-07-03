@@ -1,24 +1,14 @@
 import React from "react";
+import { createChart } from "lightweight-charts";
+import Header from "../../components/Layout/Header";
 
 export default function ADR() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState([]);
-  const [dimensions, setDimensions] = React.useState({
-    width: 0,
-    height: 0,
-  });
+  let chart;
 
   const ref = React.useRef();
-
-  //get window size
-  React.useEffect(() => {
-    function handleResize() {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   //fetch and process data
   React.useEffect(async () => {
@@ -27,21 +17,21 @@ export default function ADR() {
       const adr = await fetchData("BABA");
       const ord = await fetchData("9988.HK");
       const fx = await fetchData("HKDUSD=X");
-      const data = reduce(adr, ord, fx);
+      const data = parseData(adr, ord, fx, 8);
       setData(data);
-      initializeChart(data);
+      chart = initializeChart(data);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
+    return () => chart.remove();
   }, []);
 
-  async function initializeChart(data) {
-    const { createChart } = await import("lightweight-charts");
+  function initializeChart(data) {
     const chart = createChart(ref.current, {
-      width: 1600,
-      height: 800,
+      width: window.innerWidth,
+      height: window.innerHeight * 0.9,
       layout: {
         backgroundColor: "#000000",
         textColor: "rgba(255, 255, 255, 0.9)",
@@ -66,30 +56,24 @@ export default function ADR() {
     });
 
     const candleSeries = chart.addCandlestickSeries({
-      upColor: "rgba(255, 144, 0, 1)",
-      downColor: "#000",
-      borderDownColor: "rgba(255, 144, 0, 1)",
-      borderUpColor: "rgba(255, 144, 0, 1)",
-      wickDownColor: "rgba(255, 144, 0, 1)",
-      wickUpColor: "rgba(255, 144, 0, 1)",
+      upColor: "rgba(0,0,0,0)",
+      downColor: "#0383fe",
+      borderDownColor: "#0383fe",
+      borderUpColor: "#fff",
+      wickDownColor: "#0383fe",
+      wickUpColor: "#fff",
     });
 
     candleSeries.setData(data);
+    return chart;
   }
 
-  //resize chart
-  React.useEffect(() => {
-    /*
-    if (typeof chart !== undefined) {
-      chart.resize(dimensions.width, dimensions.height);
-      return () => {
-        chart.remove();
-      };
-    }
-    */
-  }, [dimensions]);
+  const parseData = (adr, ord, fx, r) => {
+    const fxmap = fx.timestamp.reduce((accum, curr, i) => {
+      const dateStr = new Date(fx.timestamp[i] * 1000).toDateString();
+      return { ...accum, [dateStr]: fx.open[i] };
+    }, {});
 
-  const reduce = (adr, ord, fx) => {
     const data = [];
     const len = adr.timestamp.length + ord.timestamp.length;
     let i = 0,
@@ -109,30 +93,34 @@ export default function ADR() {
         i === adr.timestamp.length ||
         adr.timestamp[i] > ord.timestamp[j]
       ) {
+        const time = ord.timestamp[j];
+        const dateStr = new Date(time * 1000).toDateString();
         data.push({
           time: ord.timestamp[j],
-          open: (ord.open[j] * 8) / 7.75,
-          high: (ord.high[j] * 8) / 7.75,
-          low: (ord.low[j] * 8) / 7.75,
-          close: (ord.close[j] * 8) / 7.75,
+          open: ord.open[j] * r * fxmap[dateStr],
+          high: ord.high[j] * r * fxmap[dateStr],
+          low: ord.low[j] * r * fxmap[dateStr],
+          close: ord.close[j] * r * fxmap[dateStr],
           origin: "ord",
         });
         j++;
       }
     }
+    console.log(data);
     return data;
   };
 
   return (
-    <div style={{ height: "100%", width: "100%" }}>
-      <div ref={ref} />
-    </div>
+    <>
+      <Header />
+      <div ref={ref} />;
+    </>
   );
 }
 
 const fetchData = (symbol) => {
   return fetch(
-    `/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=2y`
+    `/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=5y`
   )
     .then((res) => res.json())
     .then((json) => {

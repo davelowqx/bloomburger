@@ -1,9 +1,18 @@
 import React from "react";
-import { Button, Alert, Form, Row, Col } from "react-bootstrap";
+import {
+  Button,
+  Alert,
+  Container,
+  Form,
+  Row,
+  Col,
+  Spinner,
+} from "react-bootstrap";
 import BTable from "react-bootstrap/Table";
 import { useTable, useSortBy } from "react-table";
+import Layout from "../../components/Layout";
 
-export default function Financial() {
+export default function Financials() {
   const [data, setData] = React.useState([]);
   const [input, setInput] = React.useState("");
   const [symbols, setSymbols] = React.useState([
@@ -78,37 +87,50 @@ export default function Financial() {
   });
 
   return (
-    <div>
-      <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col>
-            <Form.Control
-              value={input}
-              type="text"
-              size="sm"
-              placeholder="Symbol"
-              disabled={loading}
-              onChange={handleInput}
-            />
-          </Col>
-          <Col>
-            <Button
-              variant={loading ? "secondary" : "success"}
-              size="sm"
-              disabled={loading}
-              type="submit"
-            >
-              submit
-            </Button>
-          </Col>
+    <Layout>
+      <Container fluid>
+        <Form onSubmit={handleSubmit}>
+          <Row className="my-3">
+            <div className="col-11">
+              <Form.Control
+                value={input}
+                type="text"
+                size="sm"
+                placeholder="Symbol"
+                disabled={loading}
+                onChange={handleInput}
+              />
+            </div>
+            <div className="col-1">
+              <Button
+                block
+                variant={loading ? "secondary" : "success"}
+                size="sm"
+                disabled={loading}
+                type="submit"
+              >
+                {loading ? (
+                  <Spinner
+                    as="span"
+                    role="status"
+                    size="sm"
+                    animation="border"
+                  />
+                ) : (
+                  <span>+</span>
+                )}
+              </Button>
+            </div>
+          </Row>
+        </Form>
+        <Row className="justify-content-center">
+          <Alert variant="danger" show={!!error}>
+            {error}
+          </Alert>
         </Row>
-        <Alert variant="danger" show={!!error}>
-          {error}
-        </Alert>
-      </Form>
-      <br />
-      <Table columns={columns} data={data} />
-    </div>
+        <Table columns={columns} data={data} />
+      </Container>
+    </Layout>
   );
 }
 
