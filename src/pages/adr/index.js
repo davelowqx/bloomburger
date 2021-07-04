@@ -1,11 +1,28 @@
 import React from "react";
 import { createChart } from "lightweight-charts";
 import Header from "../../components/Layout/Header";
+import Select from "./Select";
 
 export default function ADR() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState([]);
+  const [selected, setSelected] = React.useState("BABA");
+
+  const options = {
+    BABA: { ord: "9988.HK", fx: "HKDUSD=X", r: 8 },
+    BIDU: { ord: "9888.HK", fx: "HKDUSD=X", r: 8 },
+    TCEHY: { ord: "0700.HK", fx: "HKDUSD=X", r: 1 },
+    BILI: { ord: "9626.HK", fx: "HKDUSD=X", r: 1 },
+    JD: { ord: "9618.HK", fx: "HKDUSD=X", r: 2 },
+    GDS: { ord: "9698.HK", fx: "HKDUSD=X", r: 8 },
+    ASX: { ord: "3711.TW", fx: "TWDUSD=X", r: 2 },
+    IMOS: { ord: "8150.TW", fx: "TWDUSD=X", r: 20 },
+    TSM: { ord: "2330.TW", fx: "TWDUSD=X", r: 5 },
+    UMC: { ord: "2303.TW", fx: "TWDUSD=X", r: 5 },
+    LPL: { ord: "034220.KS", fx: "KRWUSD=X", r: 0.5 },
+  };
+
   let chart;
 
   const ref = React.useRef();
@@ -14,10 +31,11 @@ export default function ADR() {
   React.useEffect(async () => {
     setLoading(true);
     try {
-      const adr = await fetchData("BABA");
-      const ord = await fetchData("9988.HK");
-      const fx = await fetchData("HKDUSD=X");
-      const data = parseData(adr, ord, fx, 8);
+      const adr = await fetchData(selected);
+      const ord = await fetchData(options[selected].ord);
+      const fx = await fetchData(options[selected].fx);
+      const data = parseData(adr, ord, fx, options[selected].r);
+      console.log(data);
       setData(data);
       chart = initializeChart(data);
     } catch (error) {
@@ -26,7 +44,7 @@ export default function ADR() {
       setLoading(false);
     }
     return () => chart.remove();
-  }, []);
+  }, [selected]);
 
   function initializeChart(data) {
     const chart = createChart(ref.current, {
@@ -44,9 +62,9 @@ export default function ADR() {
           color: "rgba(197, 203, 206, 0.5)",
         },
       },
-      // crosshair: {
-      //   mode: LightweightCharts.CrosshairMode.Normal,
-      // },
+      crosshair: {
+        // mode: LightweightCharts.CrosshairMode.Normal,
+      },
       rightPriceScale: {
         borderColor: "rgba(197, 203, 206, 0.8)",
       },
@@ -106,13 +124,17 @@ export default function ADR() {
         j++;
       }
     }
-    console.log(data);
     return data;
   };
 
   return (
     <>
       <Header />
+      <Select
+        selected={selected}
+        setSelected={setSelected}
+        options={Object.keys(options)}
+      />
       <div ref={ref} />;
     </>
   );
