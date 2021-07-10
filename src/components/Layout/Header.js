@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Nav, Button, Form, FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export default function Header() {
+export default function Header({ children }) {
   return (
     <>
       <Navbar variant="dark" bg="dark">
@@ -16,6 +16,9 @@ export default function Header() {
           <Nav.Link as={Link} to={"/adr"}>
             ADR
           </Nav.Link>
+        </Nav>
+        <Nav className="ml-auto">
+          <Nav.Item>{children}</Nav.Item>
         </Nav>
       </Navbar>
     </>

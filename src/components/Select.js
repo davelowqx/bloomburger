@@ -3,7 +3,7 @@ import { Dropdown } from "react-bootstrap";
 
 export default function Select({ selected, setSelected, options }) {
   return (
-    <Dropdown>
+    <Dropdown alignRight>
       <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
         {selected}
       </Dropdown.Toggle>
