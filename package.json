@@ -9,6 +9,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "ajv": "^8.6.2",
     "lightweight-charts": "^3.3.0",
     "react": "17.0.2",
     "react-bootstrap": "^1.6.1",
