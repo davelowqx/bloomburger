@@ -15,23 +15,22 @@ import Layout from "../../components/Layout";
 export default function Financials() {
   const [data, setData] = React.useState([]);
   const [input, setInput] = React.useState("");
-  const [symbols, setSymbols] = React.useState([
-    "FB",
-    "JNJ",
-    "XOM",
-    "GS",
-    "HON",
-    "DUK",
-    "AMZN",
-  ]);
+  const [symbols, setSymbols] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
 
+  React.useEffect(() => {
+    localStorage.setItem("symbols", JSON.stringify(symbols));
+  }, [symbols]);
+
   React.useEffect(async () => {
+    const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
+    setSymbols(symbolsStored);
+    console.log(symbols);
     setLoading(true);
     try {
       const data = await Promise.all(
-        symbols.map((symbol) => fetchData(symbol))
+        symbols.map((symbol) => fetchAndParseData(symbol))
       );
       setData(data);
     } catch (error) {
@@ -41,17 +40,28 @@ export default function Financials() {
     }
   }, []);
 
-  const handleInput = (event) => setInput(event.target.value);
+  const handleInput = (event) => {
+    setInput(event.target.value);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setLoading(true);
+    const addlSymbols = [
+      ...new Set(
+        input
+          .split(",")
+          .map((str) => str.trim())
+          .filter((symbol) => !symbols.includes(symbol))
+      ),
+    ];
     setInput("");
-    setSymbols([...symbols, input]);
     try {
-      const addl = await fetchData(input);
-      console.log(addl);
-      setData([...data, addl]);
+      const addlData = await Promise.all(
+        addlSymbols.map((symbol) => fetchAndParseData(symbol))
+      );
+      setData([...data, ...addlData]);
+      setSymbols([...symbols, ...addlSymbols]);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -61,30 +71,108 @@ export default function Financials() {
 
   const handleDelete = (i) => {
     setData([...data.slice(0, i), ...data.slice(i + 1, data.length)]);
+    setSymbols([
+      ...symbols.slice(0, i),
+      ...symbols.slice(i + 1, symbols.length),
+    ]);
   };
 
-  const [headers, setHeaders] = React.useState([
-    "delete",
-    "symbol",
-    "name",
-    "sector",
-    "industry",
-    "marketCap",
-    "totalRevenueTTM",
-    "grossProfitTTM",
-    "operatingIncomeTTM",
-    "ebitTTM",
-    "netIncomeTTM",
-    "totalCashFromFinancingActivitiesTTM",
-    "totalCashFromOperatingActivitiesTTM",
-    "totalCashflowsFromInvestingActivitiesTTM",
-    "totalCurrentAssets",
-    "totalCurrentLiabilities",
-  ]);
-
-  const columns = headers.map((header) => {
-    return { Header: header, accessor: header };
-  });
+  const columns = [
+    { Header: "", accessor: "x" },
+    {
+      Header: "Basic",
+      columns: [
+        { Header: "Symbol", accessor: "symbol" },
+        { Header: "Sector", accessor: "sector" },
+        { Header: "Industry", accessor: "industry" },
+      ],
+    },
+    {
+      Header: "TTM Ratios",
+      columns: [
+        { Header: "P/S", accessor: "priceToSalesTTM" },
+        { Header: "P/GP", accessor: "priceToGrossProfitTTM" },
+        { Header: "P/FCF", accessor: "priceToFCFTTM" },
+        { Header: "P/E", accessor: "priceToEarningsTTM" },
+      ],
+    },
+    {
+      Header: "LFY Ratios",
+      columns: [
+        { Header: "P/S", accessor: "priceToSalesLFY" },
+        { Header: "P/GP", accessor: "priceToGrossProfitLFY" },
+        { Header: "P/FCF", accessor: "priceToFCFLFY" },
+        { Header: "P/E", accessor: "priceToEarningsLFY" },
+        { Header: "Revenue Growth % YoY", accessor: "revenueGrowth" },
+        { Header: "Earnings Growth % YoY", accessor: "earningsGrowth" },
+      ],
+    },
+    {
+      Header: "Valuation",
+      columns: [
+        { Header: "Market Cap", accessor: "marketCap" },
+        { Header: "- Cash & Eqv.", accessor: "cashAndEqv" },
+        { Header: "+ Total Debt", accessor: "totalDebt" },
+        { Header: "Enterprise Value", accessor: "enterpriseValue" },
+      ],
+    },
+    {
+      Header: "Income Statement TTM",
+      columns: [
+        { Header: "Revenue", accessor: "totalRevenueTTM" },
+        { Header: "Gross Profit", accessor: "grossProfitTTM" },
+        { Header: "Gross Margin %", accessor: "grossMarginTTM" },
+        { Header: "Operating Income", accessor: "operatingIncomeTTM" },
+        { Header: "EBITDA", accessor: "ebitdaTTM" },
+        { Header: "EBIT", accessor: "ebitTTM" },
+        { Header: "Net Income", accessor: "netIncomeTTM" },
+      ],
+    },
+    {
+      Header: "Income Statement LFY",
+      columns: [
+        { Header: "Revenue", accessor: "totalRevenue0" },
+        { Header: "Gross Profit", accessor: "grossProfit0" },
+        { Header: "Gross Margin %", accessor: "grossMargin0" },
+        { Header: "Operating Income", accessor: "operatingIncome0" },
+        { Header: "EBITDA", accessor: "ebitda0" },
+        { Header: "EBIT", accessor: "ebit0" },
+        { Header: "Net Income", accessor: "netIncome0" },
+      ],
+    },
+    {
+      Header: "Cash Flow Statement TTM",
+      columns: [
+        {
+          Header: "CFO",
+          accessor: "totalCashFromOperatingActivitiesTTM",
+        },
+        { Header: "FCF", accessor: "FCFTTM" },
+      ],
+    },
+    {
+      Header: "Cash Flow Statement LFY",
+      columns: [
+        {
+          Header: "CFO",
+          accessor: "totalCashFromOperatingActivities0",
+        },
+        { Header: "FCF", accessor: "FCF0" },
+      ],
+    },
+    // {
+    //   Header: "CFF TTM",
+    //   accessor: "totalCashFromFinancingActivitiesTTM",
+    // },
+    // {
+    //   Header: "CFI TTM",
+    //   accessor: "totalCashflowsFromInvestingActivitiesTTM",
+    // },
+    {
+      Header: "Balance Sheet MRQ",
+      columns: [{ Header: "Current Ratio", accessor: "currentRatio" }],
+    },
+  ];
 
   return (
     <Layout>
@@ -96,7 +184,7 @@ export default function Financials() {
                 value={input}
                 type="text"
                 size="sm"
-                placeholder="Symbol"
+                placeholder="Symbol (AAPL, GOOG, AMZN)"
                 disabled={loading}
                 onChange={handleInput}
               />
@@ -128,30 +216,33 @@ export default function Financials() {
             {error}
           </Alert>
         </Row>
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={data} handleDelete={handleDelete} />
       </Container>
     </Layout>
   );
 }
 
-const fetchData = async (symbol) => {
-  const sum = (accum, curr) => {
+const fetchAndParseData = async (symbol) => {
+  const sumAcrossObjects = (accum, curr, index) => {
     for (let key in accum) {
-      if (key !== "endDate") {
+      if (key !== "endDate" && accum[key] !== 0) {
         accum[key] += curr[key];
+      }
+      if (typeof accum[key] !== "number") {
+        accum[key] = 0;
       }
     }
     return accum;
   };
 
-  const arrToObjReducer = (accum, curr) => {
+  const mergeObjects = (accum, curr) => {
     for (let key in curr) {
       accum[key] = curr[key];
     }
     return accum;
   };
 
-  const addSuffix = (obj, suffix) => {
+  const addKeySuffix = (obj, suffix) => {
     const suffixed = {};
     for (let key in obj) {
       suffixed[`${key}${suffix}`] = obj[key];
@@ -163,12 +254,11 @@ const fetchData = async (symbol) => {
     try {
       return obj[field].raw;
     } catch {
-      console.log(obj);
-      return "-";
+      return "err";
     }
   };
 
-  const incomeStatementMapper = (obj) => {
+  const incomeStatementSchema = (obj) => {
     const fields = [
       "endDate",
       "totalRevenue",
@@ -184,15 +274,15 @@ const fetchData = async (symbol) => {
     return ret;
   };
 
-  const cashFlowStatementMapper = (obj) => {
+  const cashFlowStatementSchema = (obj) => {
     const fields = [
       "endDate",
       "depreciation",
-      "totalCashFromOperatingActivities",
       "capitalExpenditures",
-      "investments",
+      // "investments",
+      // "netBorrowings",
+      "totalCashFromOperatingActivities",
       "totalCashflowsFromInvestingActivities",
-      "netBorrowings",
       "totalCashFromFinancingActivities",
     ];
     const ret = { endDate: obj.endDate.fmt };
@@ -202,12 +292,18 @@ const fetchData = async (symbol) => {
     return ret;
   };
 
-  const balanceSheetMapper = (obj) => {
+  const balanceSheetSchema = (obj) => {
     const fields = [
-      "cash",
+      // "cash",  // cash & eqv === CA - inv - otherCurrentAssets - receivalbles - othershortterminvestments
+      "netReceivables",
+      "shortTermInvestments",
+      "shortLongTermDebt",
+      "otherCurrentAssets",
+      "inventory",
+      "longTermDebt",
       "totalCurrentAssets",
-      "totalAssets",
       "totalCurrentLiabilities",
+      "totalAssets",
       "totalLiab",
       "totalStockholderEquity",
     ];
@@ -243,43 +339,139 @@ const fetchData = async (symbol) => {
           balanceSheetHistoryQuarterly,
         } = result[0];
 
-        return {
+        const incomeStatementAnnual =
+          incomeStatementHistory.incomeStatementHistory
+            .map(incomeStatementSchema)
+            .map((obj, i) => addKeySuffix(obj, i))
+            .reduce(mergeObjects);
+
+        const incomeStatementTTM = addKeySuffix(
+          incomeStatementHistoryQuarterly.incomeStatementHistory
+            .map(incomeStatementSchema)
+            .reduce(sumAcrossObjects),
+          "TTM"
+        );
+
+        const cashFlowStatementAnnual =
+          cashflowStatementHistory.cashflowStatements
+            .map(cashFlowStatementSchema)
+            .map((obj, i) => addKeySuffix(obj, i))
+            .reduce(mergeObjects);
+
+        const cashFlowStatementTTM = addKeySuffix(
+          cashflowStatementHistoryQuarterly.cashflowStatements
+            .map(cashFlowStatementSchema)
+            .reduce(sumAcrossObjects),
+          "TTM"
+        );
+
+        const balanceSheetMRQ =
+          balanceSheetHistoryQuarterly.balanceSheetStatements.map(
+            balanceSheetSchema
+          )[0];
+
+        const basic = {
           symbol: symbol.toUpperCase(),
           name: price.longName,
           sector: summaryProfile.sector,
           industry: summaryProfile.industry,
           marketCap: price.marketCap.raw,
-          ...incomeStatementHistory.incomeStatementHistory
-            .map(incomeStatementMapper)
-            .map((obj, i) => addSuffix(obj, i))
-            .reduce(arrToObjReducer),
-          ...addSuffix(
-            incomeStatementHistoryQuarterly.incomeStatementHistory
-              .map(incomeStatementMapper)
-              .reduce(sum),
-            "TTM"
-          ),
-          ...cashflowStatementHistory.cashflowStatements
-            .map(cashFlowStatementMapper)
-            .map((obj, i) => addSuffix(obj, i))
-            .reduce(arrToObjReducer),
-          ...addSuffix(
-            cashflowStatementHistoryQuarterly.cashflowStatements
-              .map(cashFlowStatementMapper)
-              .reduce(sum),
-            "TTM"
-          ),
-          ...balanceSheetHistoryQuarterly.balanceSheetStatements.map(
-            balanceSheetMapper
-          )[0],
         };
+        const { grossProfitTTM, totalRevenueTTM, ebitTTM, netIncomeTTM } =
+          incomeStatementTTM;
+        const { marketCap } = basic;
+        const {
+          totalRevenue0,
+          totalRevenue1,
+          grossProfit0,
+          netIncome0,
+          netIncome1,
+        } = incomeStatementAnnual;
+        const {
+          depreciationTTM,
+          capitalExpendituresTTM,
+          totalCashFromOperatingActivitiesTTM,
+        } = cashFlowStatementTTM;
+        const { capitalExpenditures0, totalCashFromOperatingActivities0 } =
+          cashFlowStatementAnnual;
+        const {
+          totalCurrentAssets,
+          totalCurrentLiabilities,
+          shortLongTermDebt,
+          longTermDebt,
+          otherCurrentAssets,
+          netReceivables,
+          shortTermInvestments,
+          inventory,
+        } = balanceSheetMRQ;
+
+        const cashAndEqv =
+          totalCurrentAssets -
+          inventory -
+          otherCurrentAssets -
+          netReceivables -
+          shortTermInvestments;
+
+        const totalDebt = shortLongTermDebt + longTermDebt; // + commercial paper???
+        const FCFTTM =
+          totalCashFromOperatingActivitiesTTM - capitalExpendituresTTM;
+        const FCF0 = totalCashFromOperatingActivities0 - capitalExpenditures0;
+
+        const roundToOneDP = (x) => parseFloat(x.toFixed(1));
+
+        const data = {
+          ...basic,
+          ...incomeStatementAnnual,
+          ...incomeStatementTTM,
+          ...cashFlowStatementAnnual,
+          ...cashFlowStatementTTM,
+          ...balanceSheetMRQ,
+          revenueGrowth: roundToOneDP(
+            (totalRevenue0 / totalRevenue1 - 1) * 100
+          ),
+          earningsGrowth: roundToOneDP((netIncome0 / netIncome1 - 1) * 100),
+          grossMarginTTM: roundToOneDP(grossProfitTTM / totalRevenueTTM) * 100,
+          grossMargin0: roundToOneDP(grossProfit0 / totalRevenue0) * 100,
+          priceToSalesTTM: roundToOneDP(marketCap / totalRevenueTTM),
+          priceToGrossProfitTTM: roundToOneDP(marketCap / grossProfitTTM),
+          priceToFCFTTM: roundToOneDP(marketCap / FCFTTM),
+          priceToEarningsTTM: roundToOneDP(marketCap / netIncomeTTM),
+          priceToSalesLFY: roundToOneDP(marketCap / totalRevenue0),
+          priceToGrossProfitLFY: roundToOneDP(marketCap / grossProfit0),
+          priceToFCFLFY: roundToOneDP(marketCap / FCF0),
+          priceToEarningsLFY: roundToOneDP(marketCap / netIncome0),
+          ebitdaTTM: ebitTTM + depreciationTTM,
+          FCFTTM,
+          FCF0,
+          currentRatio: roundToOneDP(
+            totalCurrentAssets / totalCurrentLiabilities
+          ),
+          totalDebt,
+          cashAndEqv,
+          enterpriseValue: marketCap - cashAndEqv + totalDebt,
+        };
+
+        for (let key in data) {
+          if (
+            key !== "symbol" &&
+            key !== "sector" &&
+            key !== "name" &&
+            key !== "industry"
+          ) {
+            if (typeof data[key] !== "number") {
+              console.log(`(${key})`, data[key]);
+              data[key] = "-";
+            }
+          }
+        }
+        return data;
       } else {
         throw new Error(error.code);
       }
     });
 };
 
-function Table({ columns, data }) {
+function Table({ columns, data, handleDelete }) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
       {
@@ -321,9 +513,20 @@ function Table({ columns, data }) {
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, j) => {
                   return (
-                    <td key={j} {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </td>
+                    <>
+                      <td key={j} {...cell.getCellProps()}>
+                        {j === 0 && (
+                          <Button
+                            size="sm"
+                            variant="outline-danger"
+                            onClick={() => handleDelete(i)}
+                          >
+                            x
+                          </Button>
+                        )}
+                        {cell.render("Cell")}
+                      </td>
+                    </>
                   );
                 })}
               </tr>
