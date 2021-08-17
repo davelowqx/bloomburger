@@ -26,7 +26,6 @@ export default function Financials() {
   React.useEffect(async () => {
     const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
     setSymbols(symbolsStored);
-    console.log(symbols);
     setLoading(true);
     try {
       const data = await Promise.all(

@@ -31,7 +31,6 @@ export default function ADR() {
       const ord = await fetchData(options[selected].ord);
       const fx = await fetchData(options[selected].fx);
       const data = parseData(adr, ord, fx, options[selected].r);
-      // console.log(data);
       setData(data);
     } catch (error) {
       setError(error.message);
