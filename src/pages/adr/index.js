@@ -59,8 +59,7 @@ const fetchData = (symbol) => {
       process.env.NODE_ENV === "development"
         ? ""
         : "https://query2.finance.yahoo.com"
-    }
-    /v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=5y`
+    }/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=5y`
   )
     .then((res) => res.json())
     .then((json) => {
