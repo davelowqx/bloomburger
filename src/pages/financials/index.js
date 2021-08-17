@@ -324,7 +324,13 @@ const fetchAndParseData = async (symbol) => {
     "balanceSheetHistoryQuarterly",
   ];
 
-  return fetch(`/v10/finance/quoteSummary/${symbol}?modules=${modules}`)
+  return fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? ""
+        : "https://query2.finance.yahoo.com"
+    }/v10/finance/quoteSummary/${symbol}?modules=${modules}`
+  )
     .then((res) => res.json())
     .then((json) => {
       const { result, error } = json.quoteSummary;
