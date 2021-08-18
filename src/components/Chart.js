@@ -7,7 +7,7 @@ export default function Chart({ data }) {
   React.useEffect(() => {
     const chart = createChart(ref.current, {
       width: window.innerWidth,
-      height: window.innerHeight * 0.9,
+      height: window.innerHeight * 0.93,
       layout: {
         backgroundColor: "#000000",
         textColor: "rgba(255, 255, 255, 0.9)",

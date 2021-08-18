@@ -48,7 +48,14 @@ export default function ADR() {
           options={Object.keys(options)}
         />
       </Header>
-      <Chart data={data} />;
+      {loading && (
+        <div className="d-flex flex-column align-items-center">
+          <div className="d-flex justify-content-center">
+            <div className="spinner-border secondary" />
+          </div>
+        </div>
+      )}
+      {!loading && <Chart data={data} />}
     </>
   );
 }
