@@ -12,7 +12,7 @@ import BTable from "react-bootstrap/Table";
 import { useTable, useSortBy } from "react-table";
 import Layout from "../../components/Layout";
 
-export default function Financials() {
+export default function Comps() {
   const [data, setData] = React.useState([]);
   const [input, setInput] = React.useState("");
   const [symbols, setSymbols] = React.useState([]);

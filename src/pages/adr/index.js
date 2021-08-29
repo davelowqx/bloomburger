@@ -55,7 +55,7 @@ export default function ADR() {
           </div>
         </div>
       )}
-      {!loading && <Chart data={data} />}
+      {!loading && <Chart data={data} width={0.99} height={0.93} />}
     </>
   );
 }

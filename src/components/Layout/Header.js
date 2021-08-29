@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Button, Form, FormControl } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function Header({ children }) {
@@ -10,8 +10,8 @@ export default function Header({ children }) {
           BLOOMBURGER
         </Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to={"/financials"}>
-            Financials
+          <Nav.Link as={Link} to={"/comps"}>
+            Comps
           </Nav.Link>
           <Nav.Link as={Link} to={"/adr"}>
             ADR
