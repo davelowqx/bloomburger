@@ -7,8 +7,8 @@ export default function Chart({ data, text }) {
   let candlestickSeries;
 
   const handleResize = () => {
-    let w = ref.current?.parentNode?.clientWidth;
-    let h = ref.current?.parentNode?.clientHeight;
+    let w = ref.current?.clientWidth;
+    let h = ref.current?.clientHeight;
     // console.log(`width: ${w}, height: ${h}`);
     chart.resize(w, h);
   };
@@ -21,17 +21,17 @@ export default function Chart({ data, text }) {
       },
       grid: {
         vertLines: {
-          color: "rgba(197, 203, 206, 0.5)",
+          color: "rgba(197, 203, 206, 0.2)",
         },
         horzLines: {
-          color: "rgba(197, 203, 206, 0.5)",
+          color: "rgba(197, 203, 206, 0.2)",
         },
       },
       watermark: {
-        color: "rgba(255, 255, 255, 0.9)",
+        color: "#ffa028",
         visible: !!text,
         text,
-        fontSize: 24,
+        fontSize: 16,
         horzAlign: "left",
         vertAlign: "top",
       },
@@ -67,7 +67,12 @@ export default function Chart({ data, text }) {
           open != null && high != null && low != null && close != null
       )
     );
+    chart.applyOptions({
+      timeScale: {
+        rightOffset: 3,
+      },
+    });
   }, [data]);
 
-  return <div ref={ref} />;
+  return <div className="w-100 h-100" ref={ref} />;
 }

@@ -64,14 +64,15 @@ export default function Home() {
 
   return (
     <Layout>
-      <Container fluid>
+      <div className="container-fluid bg-dark-grey text-light">
+        <br />
         <ChartList assets={usIndices} title={"US Indices"} />
         <ChartList assets={globalIndices} title={"Global Indices"} dual />
-        {/* <ChartList assets={currencies} title={"Currencies"} />
+        <ChartList assets={currencies} title={"Currencies"} />
         <ChartList assets={commodities} title={"Commodities"} />
         <ChartList assets={crypto} title={"Crypto"} dual />
-        <ChartList assets={usSectors} title={"US Sectors"} dual /> */}
-      </Container>
+        <ChartList assets={usSectors} title={"US Sectors"} dual />
+      </div>
     </Layout>
   );
 }
@@ -79,36 +80,36 @@ export default function Home() {
 function ChartList({ assets, title }) {
   return (
     <>
-      <div className="row justify-content-center mt-3">
-        <h2>{title}</h2>
+      <div className="row justify-content-center">
+        <h4>{title}</h4>
       </div>
       {assets.map(({ symbol, desc }, i) => (
         <>
           <div className="row px-2">
-            <h4>{desc}</h4>
+            <h6>{desc}</h6>
           </div>
           <div className="row">
             <div className="col-12 col-xl-6 mb-4 px-2">
               <div
-                className="d-flex justify-content-center align-items-center bg-secondary "
-                style={{ height: 500 }}
+                className="w-100 d-flex justify-content-center align-items-center "
+                style={{ height: "70vh" }}
               >
-                <ChartData symbol={symbol} interval={"1wk"} />
+                <ChartData mode={"normal"} symbol={symbol} interval={"1wk"} />
               </div>
             </div>
             <div className="col-12 col-xl-6 mb-4 px-2">
               <div
-                className="d-flex justify-content-center align-items-center bg-secondary "
-                style={{ height: 500 }}
+                className="w-100 d-flex justify-content-center align-items-center "
+                style={{ height: "70vh" }}
               >
-                <ChartData symbol={symbol} interval={"1d"} />
+                <ChartData mode={"normal"} symbol={symbol} interval={"1d"} />
               </div>
             </div>
           </div>
         </>
       ))}
       <div className="row px-2">
-        <div className="col-12 border-bottom border-secondary"></div>
+        <div className="col-12 border-top border-secondary mb-3"></div>
       </div>
     </>
   );

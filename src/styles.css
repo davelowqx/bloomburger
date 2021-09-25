@@ -1,0 +1,39 @@
+:root {
+  --black: #000;
+  --yellow: #ffa028;
+  --dark-grey: #020d13;
+  --light-grey: #0c1b20;
+  --blue: #024a90;
+  --red: #a51926;
+}
+
+@font-face {
+  font-family: "Bloomberg LogoTypes-Medium";
+  src: url("./fonts/Bloomberg-Logotypes-Medium-0e53877b78.woff2");
+}
+
+div.brand {
+  font-family: "Bloomberg LogoTypes-Medium";
+}
+
+div.bg-yellow {
+  background-color: var(--yellow);
+}
+div.bg-dark-grey {
+  background-color: var(--dark-grey);
+}
+div.bg-light-grey {
+  background-color: var(--light-grey);
+}
+div.bg-blue {
+  background-color: var(--blue);
+}
+div.bg-red {
+  background-color: var(--red);
+}
+div.bg-yellow {
+  background-color: var(--yellow);
+}
+div.bg-black {
+  background-color: var(--black);
+}

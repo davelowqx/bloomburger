@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 
 export default function Header({ children }) {
   return (
-    <>
-      <Navbar variant="dark" bg="dark">
+    <div className="bg-black">
+      <Navbar variant="dark">
         <Navbar.Brand as={Link} to={"/"}>
-          BLOOMBURGER
+          <div className="brand">Bloomburger</div>
         </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link as={Link} to={"/comps"}>
@@ -21,6 +21,6 @@ export default function Header({ children }) {
           <Nav.Item>{children}</Nav.Item>
         </Nav>
       </Navbar>
-    </>
+    </div>
   );
 }
