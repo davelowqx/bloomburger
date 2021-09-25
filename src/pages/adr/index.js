@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../components/Layout/Header";
 import Chart from "../../components/Chart";
 import Select from "../../components/Select";
+import { fetchData, parseAdrData } from "../../db";
 
 export default function ADR() {
   const [loading, setLoading] = React.useState(false);
@@ -27,10 +28,10 @@ export default function ADR() {
   React.useEffect(async () => {
     setLoading(true);
     try {
-      const adr = await fetchData(selected);
-      const ord = await fetchData(options[selected].ord);
-      const fx = await fetchData(options[selected].fx);
-      const data = parseData(adr, ord, fx, options[selected].r);
+      const adr = await fetchData(selected, "1d");
+      const ord = await fetchData(options[selected].ord, "1d");
+      const fx = await fetchData(options[selected].fx, "1d");
+      const data = parseAdrData(adr, ord, fx, options[selected].r);
       setData(data);
     } catch (error) {
       setError(error.message);
@@ -40,7 +41,7 @@ export default function ADR() {
   }, [selected]);
 
   return (
-    <>
+    <div style={{ width: "100vw", height: "100vh" }}>
       <Header>
         <Select
           selected={selected}
@@ -48,82 +49,13 @@ export default function ADR() {
           options={Object.keys(options)}
         />
       </Header>
-      {loading && (
-        <div className="d-flex flex-column align-items-center">
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border secondary" />
-          </div>
-        </div>
-      )}
-      {!loading && <Chart data={data} width={0.99} height={0.93} />}
-    </>
+      <div
+        className="d-flex justify-content-center align-items-center bg-secondary"
+        style={{ width: "100%", height: "calc(100% - 56px)" }}
+      >
+        {loading && <div className="spinner-border secondary" />}
+        {!loading && <Chart data={data} />}
+      </div>
+    </div>
   );
 }
-
-const fetchData = (symbol) => {
-  return fetch(
-    `${
-      process.env.NODE_ENV === "development"
-        ? ""
-        : "https://query2.finance.yahoo.com"
-    }/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=1d&range=5y`
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      const { result, error } = json.chart;
-      if (error === null) {
-        const { timestamp, indicators } = result[0];
-        return {
-          timestamp,
-          open: indicators.quote[0].open,
-          high: indicators.quote[0].high,
-          low: indicators.quote[0].low,
-          close: indicators.quote[0].close,
-          volume: indicators.quote[0].volume,
-        };
-      } else {
-        throw new Error(error.code);
-      }
-    });
-};
-
-const parseData = (adr, ord, fx, r) => {
-  const fxmap = fx.timestamp.reduce((accum, curr, i) => {
-    const dateStr = new Date(fx.timestamp[i] * 1000).toDateString();
-    return { ...accum, [dateStr]: fx.open[i] };
-  }, {});
-
-  const data = [];
-  const len = adr.timestamp.length + ord.timestamp.length;
-  let i = 0,
-    j = 0;
-  for (let k = 0; k < len; k++) {
-    if (j === ord.timestamp.length || adr.timestamp[i] < ord.timestamp[j]) {
-      data.push({
-        time: adr.timestamp[i],
-        open: adr.open[i],
-        high: adr.high[i],
-        low: adr.low[i],
-        close: adr.close[i],
-        origin: "adr",
-      });
-      i++;
-    } else if (
-      i === adr.timestamp.length ||
-      adr.timestamp[i] > ord.timestamp[j]
-    ) {
-      const time = ord.timestamp[j];
-      const dateStr = new Date(time * 1000).toDateString();
-      data.push({
-        time: ord.timestamp[j],
-        open: ord.open[j] * r * fxmap[dateStr],
-        high: ord.high[j] * r * fxmap[dateStr],
-        low: ord.low[j] * r * fxmap[dateStr],
-        close: ord.close[j] * r * fxmap[dateStr],
-        origin: "ord",
-      });
-      j++;
-    }
-  }
-  return data;
-};

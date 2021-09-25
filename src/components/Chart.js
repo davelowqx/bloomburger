@@ -1,12 +1,20 @@
 import React from "react";
 import { createChart, CrosshairMode } from "lightweight-charts";
 
-export default function Chart({ data, text, width, height }) {
+export default function Chart({ data, text }) {
   const ref = React.useRef();
+  let chart;
+  let candlestickSeries;
+
+  const handleResize = () => {
+    let w = ref.current?.parentNode?.clientWidth;
+    let h = ref.current?.parentNode?.clientHeight;
+    // console.log(`width: ${w}, height: ${h}`);
+    chart.resize(w, h);
+  };
+
   React.useEffect(() => {
-    const chart = createChart(ref.current, {
-      width: window.innerWidth * width,
-      height: window.innerHeight * height,
+    chart = createChart(ref.current, {
       layout: {
         backgroundColor: "#000000",
         textColor: "rgba(255, 255, 255, 0.9)",
@@ -37,7 +45,10 @@ export default function Chart({ data, text, width, height }) {
         borderColor: "rgba(197, 203, 206, 0.8)",
       },
     });
-    const candlestickSeries = chart.addCandlestickSeries({
+
+    handleResize();
+
+    candlestickSeries = chart.addCandlestickSeries({
       upColor: "rgba(0,0,0,0)",
       downColor: "#0383fe",
       borderDownColor: "#0383fe",
@@ -45,16 +56,17 @@ export default function Chart({ data, text, width, height }) {
       wickDownColor: "#0383fe",
       wickUpColor: "#fff",
     });
+
+    window.addEventListener("resize", handleResize);
+  }, []);
+
+  React.useEffect(() => {
     candlestickSeries.setData(
       data.filter(
         ({ open, high, low, close }) =>
           open != null && high != null && low != null && close != null
       )
     );
-
-    return () => {
-      chart.remove();
-    };
   }, [data]);
 
   return <div ref={ref} />;

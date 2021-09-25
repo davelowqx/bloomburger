@@ -76,52 +76,39 @@ export default function Home() {
   );
 }
 
-function ChartList({ assets, title, dual }) {
+function ChartList({ assets, title }) {
   return (
     <>
-      <div class="row justify-content-center">
+      <div className="row justify-content-center mt-3">
         <h2>{title}</h2>
       </div>
-      <div class="row justify-content-center">
-        {assets.map(({ symbol, desc }, i) => (
-          <>
-            {dual && (
-              <>
-                <div class="row">
-                  <h4>{desc}</h4>
-                </div>
-                <div class="row">
-                  <div class="col-6 mb-3">
-                    <ChartData
-                      symbol={symbol}
-                      interval={"1wk"}
-                      width={0.46}
-                      height={0.6}
-                    />
-                  </div>
-                  <div class="col-6 mb-3">
-                    <ChartData
-                      symbol={symbol}
-                      interval={"1d"}
-                      width={0.46}
-                      height={0.6}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-            {!dual && (
-              <div class="col-6 mb-3">
-                <ChartData
-                  symbol={symbol}
-                  interval={"1d"}
-                  width={0.46}
-                  height={0.6}
-                />
+      {assets.map(({ symbol, desc }, i) => (
+        <>
+          <div className="row px-2">
+            <h4>{desc}</h4>
+          </div>
+          <div className="row">
+            <div className="col-12 col-xl-6 mb-4 px-2">
+              <div
+                className="d-flex justify-content-center align-items-center bg-secondary "
+                style={{ height: 500 }}
+              >
+                <ChartData symbol={symbol} interval={"1wk"} />
               </div>
-            )}
-          </>
-        ))}
+            </div>
+            <div className="col-12 col-xl-6 mb-4 px-2">
+              <div
+                className="d-flex justify-content-center align-items-center bg-secondary "
+                style={{ height: 500 }}
+              >
+                <ChartData symbol={symbol} interval={"1d"} />
+              </div>
+            </div>
+          </div>
+        </>
+      ))}
+      <div className="row px-2">
+        <div className="col-12 border-bottom border-secondary"></div>
       </div>
     </>
   );
