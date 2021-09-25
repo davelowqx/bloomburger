@@ -1,6 +1,6 @@
 import React from "react";
 import Chart from "./Chart";
-import { fetchData, parseAdrData } from "../db";
+import { fetchData, parseAdrData, parseBinaryData } from "../db";
 
 export default function ChartData({ mode, symbol, interval }) {
   const [loading, setLoading] = React.useState(true);
@@ -12,7 +12,7 @@ export default function ChartData({ mode, symbol, interval }) {
     try {
       let result;
       switch (mode) {
-        case "normal":
+        case "standard":
           console.log("hi");
           result = await fetchData(symbol, interval);
           break;
@@ -22,10 +22,10 @@ export default function ChartData({ mode, symbol, interval }) {
           const fxData = await fetchData(symbol.fx, interval);
           result = parseAdrData(adrData, ordData, fxData, symbol.r);
           break;
-        case "ratio":
-          const numeratorData = await fetchData(symbol.fx, interval);
-          const denominatorData = await fetchData(symbol.ord, interval);
-        // result = null;
+        case "binary":
+          const adata = await fetchData(symbol.a, interval);
+          const bdata = await fetchData(symbol.b, interval);
+          result = parseBinaryData(adata, bdata, symbol.op);
       }
       setData(result);
     } catch (err) {
@@ -42,12 +42,12 @@ export default function ChartData({ mode, symbol, interval }) {
         <Chart
           data={data}
           text={`${
-            mode === "normal"
+            mode === "standard"
               ? symbol
               : mode === "adr"
               ? symbol.adr + " ∪ " + symbol.ord
-              : mode === "ratio"
-              ? symbol.numerator + " / " + symbol.denominator
+              : mode === "binary"
+              ? symbol.a + symbol.op + symbol.b
               : "???"
           } (${
             ["1d", "5d", "1wk", "1mo", "3mo"].includes(interval)
@@ -56,7 +56,7 @@ export default function ChartData({ mode, symbol, interval }) {
           })`}
         />
       )}
-      {error && <div>Error</div>}
+      {!loading && error && <div>Error</div>}
     </div>
   );
 }

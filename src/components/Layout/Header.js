@@ -10,6 +10,9 @@ export default function Header({ children }) {
           <div className="brand">Bloomburger</div>
         </Navbar.Brand>
         <Nav className="mr-auto">
+          <Nav.Link as={Link} to={"/sentiment"}>
+            Sentiment
+          </Nav.Link>
           <Nav.Link as={Link} to={"/comps"}>
             Comps
           </Nav.Link>

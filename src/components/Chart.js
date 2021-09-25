@@ -61,12 +61,7 @@ export default function Chart({ data, text }) {
   }, []);
 
   React.useEffect(() => {
-    candlestickSeries.setData(
-      data.filter(
-        ({ open, high, low, close }) =>
-          open != null && high != null && low != null && close != null
-      )
-    );
+    candlestickSeries.setData(data);
     chart.applyOptions({
       timeScale: {
         rightOffset: 3,

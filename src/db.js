@@ -62,4 +62,23 @@ const parseAdrData = (adr, ord, fx, r) => {
   return data;
 };
 
-export { fetchData, parseAdrData };
+const parseBinaryData = (a, b, op) => {
+  const data = [];
+  const f = (x, y) => (op === "/" ? x / y : op === "-" ? x - y : null);
+  let i = 0;
+  while (i < a.length) {
+    if (a[i].close && b[i].close && a[i].time === b[i].time) {
+      data.push({
+        time: a[i].time,
+        open: f(a[i].open, b[i].open),
+        high: f(a[i].high, b[i].low),
+        low: f(a[i].low, b[i].high),
+        close: f(a[i].close, b[i].close),
+      });
+    }
+    i++;
+  }
+  return data;
+};
+
+export { fetchData, parseAdrData, parseBinaryData };
