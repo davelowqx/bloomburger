@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import BTable from "react-bootstrap/Table";
 import { useTable, useSortBy } from "react-table";
-import Layout from "../../components/Layout";
+import Layout from "../components/Layout";
 
 export default function Comps() {
   const [data, setData] = React.useState([]);

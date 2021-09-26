@@ -13,7 +13,6 @@ export default function ChartData({ mode, symbol, interval }) {
       let result;
       switch (mode) {
         case "standard":
-          console.log("hi");
           result = await fetchData(symbol, interval);
           break;
         case "adr":
@@ -26,6 +25,9 @@ export default function ChartData({ mode, symbol, interval }) {
           const adata = await fetchData(symbol.a, interval);
           const bdata = await fetchData(symbol.b, interval);
           result = parseBinaryData(adata, bdata, symbol.op);
+          break;
+        default:
+          result = [];
       }
       setData(result);
     } catch (err) {
@@ -56,7 +58,7 @@ export default function ChartData({ mode, symbol, interval }) {
           })`}
         />
       )}
-      {!loading && error && <div>Error</div>}
+      {!loading && error && <div>{error}</div>}
     </div>
   );
 }

@@ -1,8 +1,7 @@
 import React from "react";
-import Header from "../../components/Layout/Header";
-import Chart from "../../components/Chart";
-import Select from "../../components/Select";
-import ChartData from "../../components/ChartData";
+import Header from "../components/Layout/Header";
+import Select from "../components/Select";
+import ChartData from "../components/ChartData";
 
 export default function ADR() {
   const [symbol, setSymbol] = React.useState("BABA");
@@ -14,6 +13,12 @@ export default function ADR() {
     BILI: { adr: "BILI", ord: "9626.HK", fx: "HKDUSD=X", r: 1 },
     JD: { adr: "JD", ord: "9618.HK", fx: "HKDUSD=X", r: 2 },
     GDS: { adr: "GDS", ord: "9698.HK", fx: "HKDUSD=X", r: 8 },
+    PTR: { adr: "PTR", ord: "0857.HK", fx: "HKDUSD=X", r: 100 },
+    SNP: { adr: "SNP", ord: "0386.HK", fx: "HKDUSD=X", r: 100 },
+    SONY: { adr: "SONY", ord: "6758.T", fx: "JPYUSD=X", r: 1 },
+    CAJ: { adr: "CAJ", ord: "7751.T", fx: "JPYUSD=X", r: 1 },
+    MUFG: { adr: "MUFG", ord: "8306.T", fx: "JPYUSD=X", r: 1 },
+    LFC: { adr: "LFC", ord: "2628.HK", fx: "HKDUSD=X", r: 5 },
     ASX: { adr: "ASX", ord: "3711.TW", fx: "TWDUSD=X", r: 2 },
     IMOS: { adr: "IMOS", ord: "8150.TW", fx: "TWDUSD=X", r: 20 },
     TSM: { adr: "TSM", ord: "2330.TW", fx: "TWDUSD=X", r: 5 },

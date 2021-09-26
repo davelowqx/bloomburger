@@ -58,6 +58,8 @@ export default function Chart({ data, text }) {
     });
 
     window.addEventListener("resize", handleResize);
+
+    return () => chart.remove();
   }, []);
 
   React.useEffect(() => {
