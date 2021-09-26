@@ -6,6 +6,21 @@ const fetchData = async (symbol, interval) => {
         : "https://query2.finance.yahoo.com"
     }/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=${interval}&range=3y`
     // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
+    // {
+    //   method: "GET",
+    //   mode: "cors", // no-cors, *cors, same-origin
+    //   cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    //   credentials: "same-origin", // include, *same-origin, omit
+    //   headers: {
+    //     Host: "",
+    //     "User-Agent": "",
+    //     Accept: "*/*",
+    //     "Accept-Encoding": "gzip, deflate, br",
+    //     Connection: "keep-alive",
+    //   },
+    //   redirect: "follow", // manual, *follow, error
+    //   referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    // }
   ).then((res) => res.json());
 
   const { result, error } = json.chart;
