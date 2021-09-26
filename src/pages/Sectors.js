@@ -19,7 +19,7 @@ export default function Sectors() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-dark-grey text-light">
+      <div className="container-fluid bg-dark-gray text-light">
         <br />
         <ChartList assets={usSectors} title={"US Sectors"} dual />
       </div>

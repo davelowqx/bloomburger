@@ -1,30 +1,26 @@
-const fetchData = (symbol, interval) => {
-  return fetch(
+const fetchData = async (symbol, interval) => {
+  const json = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? ""
         : "https://query2.finance.yahoo.com"
     }/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=${interval}&range=3y`
     // Valid intervals: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo]
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      const { result, error } = json.chart;
-      if (error === null) {
-        const { timestamp, indicators } = result[0];
-        return timestamp.map((t, i) => {
-          return {
-            time: t,
-            open: indicators.quote[0].open[i],
-            high: indicators.quote[0].high[i],
-            low: indicators.quote[0].low[i],
-            close: indicators.quote[0].close[i],
-          };
-        });
-      } else {
-        throw new Error(error.code);
-      }
-    });
+  ).then((res) => res.json());
+
+  const { result, error } = json.chart;
+  if (error) {
+    throw new Error(`"${symbol}" ${error.code}`);
+  } else {
+    const { timestamp, indicators } = result[0];
+    return timestamp.map((t, i) => ({
+      time: t,
+      open: indicators.quote[0].open[i],
+      high: indicators.quote[0].high[i],
+      low: indicators.quote[0].low[i],
+      close: indicators.quote[0].close[i],
+    }));
+  }
 };
 
 const parseAdrData = (adr, ord, fx, r) => {

@@ -16,7 +16,7 @@ export default function Currencies() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-dark-grey text-light">
+      <div className="container-fluid bg-gray-dark text-light">
         <br />
         <ChartList assets={currencies} title={""} />
       </div>

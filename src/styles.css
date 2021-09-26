@@ -1,8 +1,8 @@
 :root {
   --black: #000;
   --yellow: #ffa028;
-  --dark-grey: #020d13;
-  --light-grey: #0c1b20;
+  --gray-dark: #020d13;
+  --gray: #0c1b20;
   --blue: #024a90;
   --red: #a51926;
 }
@@ -12,28 +12,38 @@
   src: url("./fonts/Bloomberg-Logotypes-Medium-0e53877b78.woff2");
 }
 
-div.brand {
+@font-face {
+  font-family: "Roadgeek 2005 Series 2w";
+  src: url("./fonts/roadgeek-2005-series-2w.ttf");
+}
+
+body {
+  /* font-family: "Roadgeek 2005 Series 2w"; */
+  font-size: 16px;
+}
+
+.brand {
   font-family: "Bloomberg LogoTypes-Medium";
 }
 
-div.bg-yellow {
+.bg-yellow {
   background-color: var(--yellow);
 }
-div.bg-dark-grey {
-  background-color: var(--dark-grey);
+.bg-gray-dark {
+  background-color: var(--gray-dark);
 }
-div.bg-light-grey {
-  background-color: var(--light-grey);
+.bg-gray {
+  background-color: var(--gray);
 }
-div.bg-blue {
+.bg-blue {
   background-color: var(--blue);
 }
-div.bg-red {
+.bg-red {
   background-color: var(--red);
 }
-div.bg-yellow {
+.bg-yellow {
   background-color: var(--yellow);
 }
-div.bg-black {
+.bg-black {
   background-color: var(--black);
 }

@@ -14,7 +14,7 @@ export default function Commodities() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-dark-grey text-light">
+      <div className="container-fluid bg-gray-dark text-light">
         <br />
         <ChartList assets={commodities} title={""} />
       </div>

@@ -1,32 +1,46 @@
 import React from "react";
-import Layout from "../components/Layout";
-import ChartList from "../components/ChartList";
+import ChartData from "../components/ChartData";
+import { Form } from "react-bootstrap";
+import Header from "../components//Layout/Header";
 
 export default function Home() {
-  const usIndices = [
-    { symbol: "^NDX", desc: "Nasdaq 100" },
-    { symbol: "^GSPC", desc: "S&P 500" },
-    { symbol: "^RUT", desc: "Russell 2000" },
-    { symbol: "^DJI", desc: "Dow Jones 30" },
-    { symbol: "^TNX", desc: "US10Y" },
-    { symbol: "^VIX", desc: "CBOE Volatility Index" },
-  ];
-
-  const globalIndices = [
-    { symbol: "^HSI", desc: "Hang Seng Index" },
-    { symbol: "000001.SS", desc: "SSE Composite" },
-    { symbol: "^KS11", desc: "KOSPI Composite" },
-    { symbol: "^N225", desc: "Nikkei 225" },
-    { symbol: "^FTSE", desc: "FTSE 1000" },
-  ];
+  const [symbol, setSymbol] = React.useState("SPY");
+  const [field, setField] = React.useState("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSymbol(field);
+    setField("");
+    console.log(symbol);
+  };
 
   return (
-    <Layout>
-      <div className="container-fluid bg-dark-grey text-light">
-        <br />
-        <ChartList assets={usIndices} title={"US Indices"} dual />
-        <ChartList assets={globalIndices} title={"Global Indices"} dual />
+    <div className="vw-100 vh-100 ">
+      <Header />
+      <div className="row bg-red text-light w-100 mx-0">
+        <div className="col-5 px-0">
+          <Form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="bg-yellow w-100"
+              style={{ position: "relative" }}
+              placeholder={`${symbol} US Equity`}
+              value={field}
+              onChange={(event) => setField(event.target.value.toUpperCase())}
+            />
+          </Form>
+        </div>
+        <div className="col-2 px-0">
+          <button className="w-100 bg-red" type="submit">
+            Submit
+          </button>
+        </div>
+        <div className="col-5 px-2" style={{ textAlign: "right" }}>
+          GPC Candle Chart
+        </div>
       </div>
-    </Layout>
+      <div className="w-100 " style={{ height: "calc(100% - 86px)" }}>
+        <ChartData mode="standard" symbol={symbol} interval={"1d"} />
+      </div>
+    </div>
   );
 }

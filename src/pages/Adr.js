@@ -27,7 +27,7 @@ export default function ADR() {
   };
 
   return (
-    <div className="vw-100 vh-100">
+    <div className="vw-100 vh-100 ">
       <Header>
         <Select
           selected={symbol}

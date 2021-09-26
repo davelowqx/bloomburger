@@ -10,7 +10,7 @@ export default function ChartList({ assets, title, dual }) {
         </div>
       )}
       {assets.map(({ symbol, desc }, i) => (
-        <>
+        <div id={i}>
           <div className="row px-3">
             <h6>{desc}</h6>
           </div>
@@ -58,7 +58,7 @@ export default function ChartList({ assets, title, dual }) {
               </div>
             )}
           </div>
-        </>
+        </div>
       ))}
       <div className="row px-3">
         <div className="col-12 border-top border-secondary mb-3"></div>

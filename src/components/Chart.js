@@ -53,7 +53,7 @@ export default function Chart({ data, text }) {
       downColor: "#0383fe",
       borderDownColor: "#0383fe",
       borderUpColor: "#fff",
-      wickDownColor: "#0383fe",
+      wickDownColor: "#fff",
       wickUpColor: "#fff",
     });
 

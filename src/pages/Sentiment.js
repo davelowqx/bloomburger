@@ -27,7 +27,7 @@ export default function Sentiment() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-dark-grey text-light">
+      <div className="container-fluid bg-gray-dark text-light">
         <br />
         <ChartList assets={ratios} title={""} />
       </div>

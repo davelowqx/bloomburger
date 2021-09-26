@@ -9,6 +9,7 @@ export default function ChartData({ mode, symbol, interval }) {
 
   React.useEffect(async () => {
     setLoading(true);
+    setError(null);
     try {
       let result;
       switch (mode) {
@@ -38,7 +39,7 @@ export default function ChartData({ mode, symbol, interval }) {
   }, [symbol]);
 
   return (
-    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-light-grey">
+    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-gray text-light">
       {loading && <div className="spinner-border secondary "></div>}
       {!loading && !error && (
         <Chart

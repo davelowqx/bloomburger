@@ -8,12 +8,15 @@ import Sectors from "./pages/Sectors";
 import Currencies from "./pages/Currencies";
 import Commodities from "./pages/Commodities";
 import Crypto from "./pages/Crypto";
+import Personal from "./pages/Home";
+import Indices from "./pages/Indices";
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/indices" exact component={Indices} />
         <Route path="/comps" exact component={Comps} />
         <Route path="/sectors" exact component={Sectors} />
         <Route path="/currencies" exact component={Currencies} />
@@ -21,6 +24,7 @@ function App() {
         <Route path="/crypto" exact component={Crypto} />
         <Route path="/adr" exact component={ADR} />
         <Route path="/sentiment" exact component={Sentiment} />
+        <Route path="/personal" exact component={Personal} />
       </Switch>
     </Router>
   );
