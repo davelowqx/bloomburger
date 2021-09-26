@@ -16,12 +16,16 @@ export default function Home() {
   return (
     <div className="vw-100 vh-100 ">
       <Header />
-      <div className="row bg-red text-light w-100 mx-0">
+      <div
+        className="row bg-red text-light w-100 mx-0"
+        style={{ height: "2rem" }}
+      >
         <div className="col-5 px-0">
           <Form onSubmit={handleSubmit}>
             <input
               type="text"
               className="bg-yellow w-100"
+              style={{ height: "2rem" }}
               style={{ position: "relative" }}
               placeholder={`${symbol} US Equity`}
               value={field}
@@ -38,7 +42,7 @@ export default function Home() {
           GPC Candle Chart
         </div>
       </div>
-      <div className="w-100 " style={{ height: "calc(100% - 86px)" }}>
+      <div className="w-100" style={{ height: "calc(100% - 5.5rem)" }}>
         <ChartData mode="standard" symbol={symbol} interval={"1d"} />
       </div>
     </div>
