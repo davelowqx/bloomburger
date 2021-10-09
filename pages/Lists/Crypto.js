@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "../../components/Layout";
-import ChartList from "../../components/ChartList";
+import Layout from "../../src/components/Layout";
+import ChartList from "../../src/components/ChartList";
 
 export default function Crypto() {
   const crypto = [

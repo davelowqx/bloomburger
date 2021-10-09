@@ -1,6 +1,6 @@
 import React from "react";
 import Chart from "./Chart";
-import { fetchData, parseAdrData, parseBinaryData } from "./db";
+import { fetchData, parseAdrData, parseBinaryData } from "../db";
 
 export default function ChartData({ mode, symbol, interval }) {
   const [loading, setLoading] = React.useState(true);
