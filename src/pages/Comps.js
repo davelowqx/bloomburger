@@ -1,16 +1,7 @@
 import React from "react";
-import {
-  Button,
-  Alert,
-  Container,
-  Form,
-  Row,
-  Col,
-  Spinner,
-} from "react-bootstrap";
-import BTable from "react-bootstrap/Table";
-import { useTable, useSortBy } from "react-table";
+import { Button, Alert, Container, Form, Row, Spinner } from "react-bootstrap";
 import Layout from "../components/Layout";
+import Table from "../components/Table";
 
 export default function Comps() {
   const [data, setData] = React.useState([]);
@@ -175,48 +166,50 @@ export default function Comps() {
 
   return (
     <Layout>
-      <Container fluid>
-        <Form onSubmit={handleSubmit}>
-          <Row className="my-3">
-            <div className="col-11">
-              <Form.Control
-                value={input}
-                type="text"
-                size="sm"
-                placeholder="Symbol (AAPL, GOOG, AMZN)"
-                disabled={loading}
-                onChange={handleInput}
-              />
-            </div>
-            <div className="col-1">
-              <Button
-                block
-                variant={loading ? "secondary" : "success"}
-                size="sm"
-                disabled={loading}
-                type="submit"
-              >
-                {loading ? (
-                  <Spinner
-                    as="span"
-                    role="status"
-                    size="sm"
-                    animation="border"
-                  />
-                ) : (
-                  <span>+</span>
-                )}
-              </Button>
-            </div>
+      <div className="container-fluid bg-gray-dark text-light">
+        <Container fluid>
+          <Form onSubmit={handleSubmit}>
+            <Row className="my-3">
+              <div className="col-11">
+                <Form.Control
+                  value={input}
+                  type="text"
+                  size="sm"
+                  placeholder="Symbol (AAPL, GOOG, AMZN)"
+                  disabled={loading}
+                  onChange={handleInput}
+                />
+              </div>
+              <div className="col-1">
+                <Button
+                  block
+                  variant={loading ? "secondary" : "success"}
+                  size="sm"
+                  disabled={loading}
+                  type="submit"
+                >
+                  {loading ? (
+                    <Spinner
+                      as="span"
+                      role="status"
+                      size="sm"
+                      animation="border"
+                    />
+                  ) : (
+                    <span>+</span>
+                  )}
+                </Button>
+              </div>
+            </Row>
+          </Form>
+          <Row className="justify-content-center">
+            <Alert variant="danger" show={!!error}>
+              {error}
+            </Alert>
           </Row>
-        </Form>
-        <Row className="justify-content-center">
-          <Alert variant="danger" show={!!error}>
-            {error}
-          </Alert>
-        </Row>
-        <Table columns={columns} data={data} handleDelete={handleDelete} />
-      </Container>
+          <Table columns={columns} data={data} handleDelete={handleDelete} />
+        </Container>
+      </div>
     </Layout>
   );
 }
@@ -475,71 +468,3 @@ const fetchAndParseData = async (symbol) => {
       }
     });
 };
-
-function Table({ columns, data, handleDelete }) {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-      },
-      useSortBy
-    );
-  return (
-    <>
-      <BTable striped bordered responsive size="sm" {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup, i) => (
-            <tr key={i} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, j) => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
-                <th
-                  key={j}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                >
-                  {column.render("Header")}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr key={i} {...row.getRowProps()}>
-                {row.cells.map((cell, j) => {
-                  return (
-                    <>
-                      <td key={j} {...cell.getCellProps()}>
-                        {j === 0 && (
-                          <Button
-                            size="sm"
-                            variant="outline-danger"
-                            onClick={() => handleDelete(i)}
-                          >
-                            x
-                          </Button>
-                        )}
-                        {cell.render("Cell")}
-                      </td>
-                    </>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </BTable>
-      <br />
-    </>
-  );
-}

@@ -1,6 +1,6 @@
 import React from "react";
-import ChartList from "../components/ChartList";
-import Layout from "../components/Layout";
+import ChartList from "../../components/ChartList";
+import Layout from "../../components/Layout";
 
 export default function Sectors() {
   const usSectors = [
@@ -19,7 +19,7 @@ export default function Sectors() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-dark-gray text-light">
+      <div className="container-fluid bg-gray-dark text-light">
         <br />
         <ChartList assets={usSectors} title={"US Sectors"} dual />
       </div>

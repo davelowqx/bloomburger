@@ -60,9 +60,6 @@ export default function ChartList({ assets, title, dual }) {
           </div>
         </div>
       ))}
-      <div className="row px-3">
-        <div className="col-12 border-top border-secondary mb-3"></div>
-      </div>
     </>
   );
 }

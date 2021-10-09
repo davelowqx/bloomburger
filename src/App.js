@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ADR from "./pages/Adr";
 import Comps from "./pages/Comps";
 import Home from "./pages/Home";
-import Sentiment from "./pages/Sentiment";
-import Sectors from "./pages/Sectors";
-import Currencies from "./pages/Currencies";
-import Commodities from "./pages/Commodities";
-import Crypto from "./pages/Crypto";
-import Personal from "./pages/Home";
-import Indices from "./pages/Indices";
+import Sentiment from "./pages/Lists/Sentiment";
+import Sectors from "./pages/Lists/Sectors";
+import Currencies from "./pages/Lists/Currencies";
+import Commodities from "./pages/Lists/Commodities";
+import Crypto from "./pages/Lists/Crypto";
+// import Personal from "./pages/Lists/Personal";
+import Indices from "./pages/Lists/Indices";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/crypto" exact component={Crypto} />
         <Route path="/adr" exact component={ADR} />
         <Route path="/sentiment" exact component={Sentiment} />
-        <Route path="/personal" exact component={Personal} />
+        {/* <Route path="/personal" exact component={Personal} /> */}
       </Switch>
     </Router>
   );

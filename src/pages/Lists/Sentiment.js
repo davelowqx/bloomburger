@@ -1,6 +1,6 @@
 import React from "react";
-import ChartList from "../components/ChartList";
-import Layout from "../components/Layout";
+import ChartList from "../../components/ChartList";
+import Layout from "../../components/Layout";
 
 export default function Sentiment() {
   const ratios = [
