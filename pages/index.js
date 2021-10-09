@@ -25,8 +25,7 @@ export default function Home() {
             <input
               type="text"
               className="bg-yellow w-100"
-              style={{ height: "2rem" }}
-              style={{ position: "relative" }}
+              style={{ height: "2rem", position: "relative" }}
               placeholder={`${symbol} US Equity`}
               value={field}
               onChange={(event) => setField(event.target.value.toUpperCase())}

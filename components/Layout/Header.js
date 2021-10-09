@@ -21,8 +21,10 @@ export default function Header({ children }) {
         </Navbar.Brand>
         <Nav className="mr-auto">
           <NavDropdown title="Lists" id="basic-nav-dropdown" menuvariant="dark">
-            {charts.map(({ path, label }) => (
-              <NavDropdown.Item href={path}>{label}</NavDropdown.Item>
+            {charts.map(({ path, label }, i) => (
+              <NavDropdown.Item key={i} href={path}>
+                {label}
+              </NavDropdown.Item>
             ))}
             <NavDropdown.Divider />
             <NavDropdown.Item href={"/lists/custom"}>Custom</NavDropdown.Item>
