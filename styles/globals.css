@@ -46,3 +46,55 @@ body {
 .bg-black {
   background-color: var(--black);
 }
+
+/* enclosing label */
+label.switch {
+  position: absolute;
+  top: 66px;
+  right: 15px;
+  width: 44px;
+  height: 26px;
+}
+
+/* checkbox */
+label.switch input {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+/* switch bg */
+span.switch {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 26px;
+  background-color: var(--gray);
+  border: 2px solid var(--gray-dark);
+  transition: 0.4s;
+}
+
+/* switch lever */
+span.switch:after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 1px;
+  top: 1px;
+  background-color: var(--red);
+  border: 2px solid var(--gray-dark);
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + span.switch {
+  background-color: var(--yellow);
+}
+
+input:checked + span.switch:after {
+  transform: translateX(18px);
+}

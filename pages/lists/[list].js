@@ -69,9 +69,15 @@ export default function List() {
   return (
     <Layout>
       <div className="container-fluid bg-gray-dark text-light">
-        <Button className="btn-sm my-2" onClick={() => setDual(!dual)}>
-          {!dual ? "dual" : "single"}
-        </Button>
+        <br />
+        <label className="switch">
+          <input
+            type="checkbox"
+            onClick={() => setDual(!dual)}
+            checked={dual}
+          />
+          <span className="switch"></span>
+        </label>
         <ChartList assets={lists[list] ?? []} title={""} dual={dual} />
       </div>
     </Layout>
