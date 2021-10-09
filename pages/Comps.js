@@ -16,6 +16,7 @@ export default function Comps() {
 
   React.useEffect(async () => {
     const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
+    console.log("stored:" + symbolsStored);
     setSymbols(symbolsStored);
     setLoading(true);
     try {
@@ -33,6 +34,7 @@ export default function Comps() {
   const handleInput = (event) => {
     setInput(event.target.value);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
@@ -306,27 +308,18 @@ const fetchAndParseData = async (symbol) => {
     return ret;
   };
 
-  const modules = [
-    "price",
-    "summaryProfile",
-    "incomeStatementHistory",
-    "incomeStatementHistoryQuarterly",
-    "cashflowStatementHistory",
-    "cashflowStatementHistoryQuarterly",
-    "balanceSheetHistoryQuarterly",
-  ];
-
-  return fetch(
-    `${
-      process.env.NODE_ENV === "development"
-        ? ""
-        : "https://query2.finance.yahoo.com"
-    }/v10/finance/quoteSummary/${symbol}?modules=${modules}`
-  )
+  return fetch("/api/comps", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ symbol }),
+  })
     .then((res) => res.json())
-    .then((json) => {
-      const { result, error } = json.quoteSummary;
-      if (error === null) {
+    .then(({ result, error }) => {
+      if (error) {
+        throw new Error(error.code);
+      } else {
         const {
           price,
           summaryProfile,
@@ -335,7 +328,7 @@ const fetchAndParseData = async (symbol) => {
           cashflowStatementHistory,
           cashflowStatementHistoryQuarterly,
           balanceSheetHistoryQuarterly,
-        } = result[0];
+        } = result;
 
         const incomeStatementAnnual =
           incomeStatementHistory.incomeStatementHistory
@@ -463,8 +456,6 @@ const fetchAndParseData = async (symbol) => {
           }
         }
         return data;
-      } else {
-        throw new Error(error.code);
       }
     });
 };

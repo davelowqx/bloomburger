@@ -1,5 +1,5 @@
 const fetchData = async (symbol, interval) => {
-  const data = await fetch("/api/data", {
+  const data = await fetch("/api/chart", {
     headers: {
       "Content-Type": "application/json",
     },
