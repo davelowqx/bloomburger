@@ -5,6 +5,7 @@
   --gray: #0c1b20;
   --blue: #024a90;
   --red: #a51926;
+  --gray-light: #8a8a8a;
 }
 
 @font-face {
@@ -54,6 +55,7 @@ label.switch {
   right: 15px;
   width: 44px;
   height: 26px;
+  z-index: 4;
 }
 
 /* checkbox */
@@ -72,8 +74,8 @@ span.switch {
   right: 0;
   bottom: 0;
   border-radius: 26px;
-  background-color: var(--gray);
-  border: 2px solid var(--gray-dark);
+  background-color: var(--red);
+  border: 2px solid var(--black);
   transition: 0.4s;
 }
 
@@ -81,11 +83,11 @@ span.switch {
 span.switch:after {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   left: 1px;
   top: 1px;
-  background-color: var(--red);
+  background-color: var(--gray-light);
   border: 2px solid var(--gray-dark);
   border-radius: 50%;
   transition: 0.4s;
