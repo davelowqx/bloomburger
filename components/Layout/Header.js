@@ -1,41 +1,34 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function Header({ children }) {
   const charts = [
-    { path: "/indices", label: "Indices" },
-    { path: "/sectors", label: "Sectors" },
-    { path: "/commodities", label: "Commodities" },
-    { path: "/currencies", label: "Currencies" },
-    { path: "/crypto", label: "Crypto" },
-    { path: "/sentiment", label: "Sentiment" },
+    { path: "/lists/globalindices", label: "Global Indices" },
+    { path: "/lists/usindices", label: "US Indices" },
+    { path: "/lists/ussectors", label: "US Sectors" },
+    { path: "/lists/commodities", label: "Commodities" },
+    { path: "/lists/currencies", label: "Currencies" },
+    { path: "/lists/crypto", label: "Crypto" },
+    { path: "/lists/complex", label: "Complex" },
   ];
 
   return (
     <div className="bg-black">
       <Navbar variant="dark">
-        <Navbar.Brand as={Link} to={"/"}>
+        <Navbar.Brand href={"/"}>
           <div className="brand">Bloomburger</div>
         </Navbar.Brand>
         <Nav className="mr-auto">
-          <NavDropdown title="Lists" id="basic-nav-dropdown" menuVariant="dark">
+          <NavDropdown title="Lists" id="basic-nav-dropdown" menuvariant="dark">
             {charts.map(({ path, label }) => (
-              <NavDropdown.Item as={Link} id={path} to={path}>
-                {label}
-              </NavDropdown.Item>
+              <NavDropdown.Item href={path}>{label}</NavDropdown.Item>
             ))}
             <NavDropdown.Divider />
-            <NavDropdown.Item as={Link} to={"/personal"}>
-              Personal
-            </NavDropdown.Item>
+            <NavDropdown.Item href={"/lists/custom"}>Custom</NavDropdown.Item>
           </NavDropdown>
-          <Nav.Link as={Link} to={"/comps"}>
-            Comps
-          </Nav.Link>
-          <Nav.Link as={Link} to={"/adr"}>
-            ADR
-          </Nav.Link>
+          <Nav.Link href={"/comps"}>Comps</Nav.Link>
+          <Nav.Link href={"/adr"}>ADR</Nav.Link>
         </Nav>
         <Nav className="ml-auto">
           <Nav.Item>{children}</Nav.Item>

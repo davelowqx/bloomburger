@@ -3,7 +3,7 @@ import Header from "../components/Layout/Header";
 import Select from "../components/Select";
 import ChartData from "../components/ChartData";
 
-export default function ADR() {
+export default function Adr() {
   const [symbol, setSymbol] = React.useState("BABA");
 
   const options = {

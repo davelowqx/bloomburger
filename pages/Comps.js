@@ -166,7 +166,7 @@ export default function Comps() {
 
   return (
     <Layout>
-      <div className="container-fluid bg-gray-dark text-light">
+      <div className="container-fluid text-light">
         <Container fluid>
           <Form onSubmit={handleSubmit}>
             <Row className="my-3">

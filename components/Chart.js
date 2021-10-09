@@ -71,5 +71,9 @@ export default function Chart({ data, text }) {
     });
   }, [data]);
 
-  return <div className="w-100 h-100" ref={ref} />;
+  return (
+    <>
+      <div className="w-100 h-100" ref={ref} />
+    </>
+  );
 }

@@ -1,6 +1,10 @@
 import React from "react";
-import Chart from "./Chart";
-import { fetchData, parseAdrData, parseBinaryData } from "../db";
+import { fetchData, parseAdrData, parseBinaryData } from "./db";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("./Chart"), {
+  ssr: false,
+});
 
 export default function ChartData({ mode, symbol, interval }) {
   const [loading, setLoading] = React.useState(true);

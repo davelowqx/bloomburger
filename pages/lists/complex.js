@@ -1,9 +1,9 @@
 import React from "react";
-import ChartList from "../../src/components/ChartList";
-import Layout from "../../src/components/Layout";
+import ChartList from "../../components/ChartList";
+import Layout from "../../components/Layout";
 
-export default function Sentiment() {
-  const ratios = [
+export default function Complex() {
+  const assets = [
     { a: "HYG", b: "TLT", op: "/", desc: "High Yield / Treasuries" },
     {
       a: "XLY",
@@ -29,7 +29,7 @@ export default function Sentiment() {
     <Layout>
       <div className="container-fluid bg-gray-dark text-light">
         <br />
-        <ChartList assets={ratios} title={""} />
+        <ChartList assets={assets} title={""} />
       </div>
     </Layout>
   );
