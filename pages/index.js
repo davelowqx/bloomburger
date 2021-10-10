@@ -64,23 +64,25 @@ export default function Home() {
               "1wk",
               "1mo",
               "3mo",
-            ].map((i) => (
+            ].map((t, i) => (
               <button
+                key={i}
                 style={{ width: "calc(100%/10)", height: "1.5rem" }}
                 className={`text-light border-1  ${
-                  interval === i ? "bg-blue" : "bg-gray"
+                  interval === t ? "bg-blue" : "bg-gray"
                 }`}
-                onClick={() => setInterval(i)}
+                onClick={() => setInterval(t)}
               >
-                {i}
+                {t}
               </button>
             ))}
           </div>
         </div>
         <div className="col-1 px-0">
           <div style={{ display: "flex", flexDirection: "row" }}>
-            {["candlestick", "area"].map((t) => (
+            {["candlestick", "area"].map((t, i) => (
               <button
+                key={i}
                 style={{ width: "50%", height: "1.5rem" }}
                 className={`text-light border-1  ${
                   chartType === t ? "bg-blue" : "bg-gray"
