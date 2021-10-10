@@ -1,16 +1,16 @@
-const fetchData = async (symbol, interval) => {
+const fetchData = async (symbol, interval, range) => {
   const data = await fetch("/api/chart", {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ symbol, interval }),
+    body: JSON.stringify({ symbol, interval, range }),
   }).then((res) => res.json());
 
   console.log(data);
   const { result, error } = data;
   if (error) {
-    throw new Error(`"${symbol}" ${error}`);
+    throw new Error(`${symbol}: ${error}`);
   } else {
     return result;
   }
@@ -55,8 +55,8 @@ const parseBinaryData = (a, b, op) => {
   const data = [];
   const f = (x, y) => (op === "/" ? x / y : op === "-" ? x - y : null);
   let i = 0;
-  while (i < a.length) {
-    if (a[i].close && b[i].close && a[i].time === b[i].time) {
+  while (i < a.length && i < b.length) {
+    if (a[i].time === b[i].time) {
       data.push({
         time: a[i].time,
         open: f(a[i].open, b[i].open),

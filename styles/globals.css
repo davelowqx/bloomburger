@@ -100,3 +100,17 @@ input:checked + span.switch {
 input:checked + span.switch:after {
   transform: translateX(18px);
 }
+
+.border-none {
+  border: none !important;
+}
+
+.border-1 {
+  border: 1px solid var(--gray-dark) !important;
+}
+
+button {
+  outline: 0 !important;
+  height: 100%;
+  line-height: inherit;
+}

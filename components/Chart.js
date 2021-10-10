@@ -1,23 +1,16 @@
 import React from "react";
 import { createChart, CrosshairMode } from "lightweight-charts";
 
-export default function Chart({ data, text }) {
-  const ref = React.useRef();
-  let chart;
-  let candlestickSeries;
-
-  const handleResize = () => {
-    let w = ref.current?.clientWidth;
-    let h = ref.current?.clientHeight;
-    // console.log(`width: ${w}, height: ${h}`);
-    chart.resize(w, h);
-  };
+export default function Chart({ data, text, chartType }) {
+  const divRef = React.useRef();
+  const chartRef = React.useRef();
+  const seriesRef = React.useRef();
 
   React.useEffect(() => {
-    chart = createChart(ref.current, {
+    chartRef.current = createChart(divRef.current, {
       layout: {
-        backgroundColor: "#000000",
-        textColor: "rgba(255, 255, 255, 0.9)",
+        backgroundColor: "#000",
+        textColor: "#fff",
       },
       grid: {
         vertLines: {
@@ -39,41 +32,72 @@ export default function Chart({ data, text }) {
         mode: CrosshairMode.Normal,
       },
       rightPriceScale: {
-        borderColor: "rgba(197, 203, 206, 0.8)",
+        borderColor: "#fff",
       },
       timeScale: {
-        borderColor: "rgba(197, 203, 206, 0.8)",
+        borderColor: "#fff",
       },
     });
 
+    const handleResize = () => {
+      let w = divRef.current.clientWidth;
+      let h = divRef.current.clientHeight;
+      // console.log(`width: ${w}, height: ${h}`);
+      chartRef.current.resize(w, h);
+    };
+
     handleResize();
-
-    candlestickSeries = chart.addCandlestickSeries({
-      upColor: "rgba(0,0,0,0)",
-      downColor: "#0383fe",
-      borderDownColor: "#0383fe",
-      borderUpColor: "#fff",
-      wickDownColor: "#fff",
-      wickUpColor: "#fff",
-    });
-
     window.addEventListener("resize", handleResize);
 
-    return () => chart.remove();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chartRef.current.remove();
+    };
   }, []);
 
   React.useEffect(() => {
-    candlestickSeries.setData(data);
-    chart.applyOptions({
+    if (seriesRef.current && chartRef.current) {
+      console.log("data or chartType changed");
+      chartRef.current.removeSeries(seriesRef.current);
+    }
+    switch (chartType) {
+      case "area":
+        seriesRef.current = chartRef.current?.addAreaSeries({
+          lineColor: "#fff",
+          topColor: "rgba(150,245,255,0.5)",
+          bottomColor: "rgba(30,105,200,0.5)",
+          lineWidth: 2,
+        });
+        break;
+      case "line":
+        seriesRef.current = chartRef.current?.addLineSeries({
+          lineColor: "#fff",
+        });
+        break;
+      case "candlestick":
+        seriesRef.current = chartRef.current?.addCandlestickSeries({
+          upColor: "rgba(0,0,0,0)",
+          downColor: "#0383fe",
+          borderDownColor: "#0383fe",
+          borderUpColor: "#fff",
+          wickDownColor: "#fff",
+          wickUpColor: "#fff",
+        });
+        break;
+      default:
+        console.error(`invalid chartType: "${chartType}"`);
+    }
+    seriesRef.current.setData(data);
+    chartRef.current?.applyOptions({
       timeScale: {
         rightOffset: 3,
       },
     });
-  }, [data]);
+  }, [data, chartType]);
 
   return (
     <>
-      <div className="w-100 h-100" ref={ref} />
+      <div className="w-100 h-100" ref={divRef} />
     </>
   );
 }

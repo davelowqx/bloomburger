@@ -10,7 +10,7 @@ export default function Header({ children }) {
     { path: "/lists/commodities", label: "Commodities" },
     { path: "/lists/currencies", label: "Currencies" },
     { path: "/lists/crypto", label: "Crypto" },
-    { path: "/lists/complex", label: "Complex" },
+    { path: "/lists/ratios", label: "Ratios" },
   ];
 
   return (
