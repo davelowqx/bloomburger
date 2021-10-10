@@ -5,7 +5,7 @@
   --gray: #0c1b20;
   --blue: #024a90;
   --red: #a51926;
-  --gray-light: #8a8a8a;
+  --gray-light: #2c363b;
 }
 
 @font-face {
@@ -34,6 +34,9 @@ body {
 }
 .bg-gray {
   background-color: var(--gray);
+}
+.bg-gray-light {
+  background-color: var(--gray-light);
 }
 .bg-blue {
   background-color: var(--blue);

@@ -7,6 +7,7 @@ export default function Header({ children }) {
     { path: "/lists/globalindices", label: "Global Indices" },
     { path: "/lists/usindices", label: "US Indices" },
     { path: "/lists/ussectors", label: "US Sectors" },
+    { path: "/lists/credit", label: "Credit" },
     { path: "/lists/commodities", label: "Commodities" },
     { path: "/lists/currencies", label: "Currencies" },
     { path: "/lists/crypto", label: "Crypto" },

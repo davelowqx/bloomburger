@@ -16,7 +16,7 @@ export default async function handler(req, ret) {
             try {
               const { result, error } = JSON.parse(raw).chart;
               if (error) {
-                throw new Error(error.code);
+                throw new Error(JSON.stringify(error));
               }
               console.log(result[0]);
               const { timestamp, indicators } = result[0];

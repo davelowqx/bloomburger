@@ -63,6 +63,7 @@ const parseBinaryData = (a, b, op) => {
         high: f(a[i].high, b[i].low),
         low: f(a[i].low, b[i].high),
         close: f(a[i].close, b[i].close),
+        value: f(a[i].close, b[i].close),
       });
     }
     i++;

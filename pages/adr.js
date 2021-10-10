@@ -36,7 +36,11 @@ export default function Adr() {
         />
       </Header>
       <div className="w-100" style={{ height: "calc(100% - 3.5rem)" }}>
-        <ChartData mode="adr" symbol={options[symbol]} interval="1d" />
+        <ChartData
+          mode="adr"
+          symbol={{ ...options[symbol], mode: "adr" }}
+          interval="1d"
+        />
       </div>
     </div>
   );
