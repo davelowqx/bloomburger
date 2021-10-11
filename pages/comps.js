@@ -308,13 +308,7 @@ const fetchAndParseData = async (symbol) => {
     return ret;
   };
 
-  return fetch("/api/comps", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({ symbol }),
-  })
+  return fetch(`/api/comps/${symbol}`)
     .then((res) => res.json())
     .then(({ result, error }) => {
       if (error) {

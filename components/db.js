@@ -1,13 +1,8 @@
 const fetchData = async (symbol, interval, range) => {
-  const data = await fetch("/api/chart", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({ symbol, interval, range }),
-  }).then((res) => res.json());
+  const data = await fetch(
+    `/api/charts/${symbol}?interval=${interval}&range=${range}`
+  ).then((res) => res.json());
 
-  console.log(data);
   const { result, error } = data;
   if (error) {
     throw new Error(`${symbol}: ${error}`);
@@ -26,8 +21,9 @@ const parseAdrData = (adr, ord, fx, r) => {
   const len = adr.length + ord.length;
   let i = 0,
     j = 0;
+
   for (let k = 0; k < len; k++) {
-    if (j === ord.length || adr[i].time < ord[j].time) {
+    if (j === ord.length || (i !== adr.length && adr[i].time < ord[j].time)) {
       data.push({
         ...adr[i],
         // origin: "adr",
