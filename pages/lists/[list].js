@@ -39,7 +39,7 @@ export default function List() {
         desc: "Technology Dominance",
       },
       {
-        symbol: { mode: "binary", a: "XLY", b: "SPY", op: "/" },
+        symbol: { mode: "binary", a: "XLU", b: "SPY", op: "/" },
         desc: "Utilities Dominance",
       },
       {
