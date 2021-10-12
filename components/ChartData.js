@@ -12,6 +12,7 @@ export default function ChartData({
   interval = "1d",
   range = "auto",
   chartType = "candlestick",
+  movingAverage = false,
 }) {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
@@ -78,6 +79,7 @@ export default function ChartData({
         <Chart
           data={data}
           chartType={chartType}
+          movingAverage={movingAverage}
           text={`${
             symbol.mode === "standard"
               ? symbol.sym

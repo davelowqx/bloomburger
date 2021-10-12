@@ -9,6 +9,7 @@ export default function List() {
   const { list } = router.query;
   const [interval, setInterval] = React.useState("1d");
   const [chartType, setChartType] = React.useState("candlestick");
+  const [movingAverage, setMovingAverage] = React.useState(false);
 
   const lists = {
     ussectors: [
@@ -137,6 +138,8 @@ export default function List() {
         setInterval={setInterval}
         chartType={chartType}
         setChartType={setChartType}
+        movingAverage={movingAverage}
+        setMovingAverage={setMovingAverage}
       />
       <div className="container-fluid bg-gray-dark text-light pt-3">
         {lists[list]?.map(({ symbol, desc }, i) => (
@@ -154,6 +157,7 @@ export default function List() {
                     symbol={symbol}
                     interval={interval}
                     chartType={chartType}
+                    movingAverage={movingAverage}
                   />
                 </div>
               </div>

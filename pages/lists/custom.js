@@ -7,6 +7,7 @@ import InputMenu from "../../components/Layout/InputMenu";
 export default function Custom() {
   const [interval, setInterval] = React.useState("1d");
   const [chartType, setChartType] = React.useState("candlestick");
+  const [movingAverage, setMovingAverage] = React.useState(false);
   const [list, setList] = React.useState([]);
 
   return (
@@ -24,6 +25,8 @@ export default function Custom() {
         setInterval={setInterval}
         chartType={chartType}
         setChartType={setChartType}
+        movingAverage={movingAverage}
+        setMovingAverage={setMovingAverage}
       />
       <div className="container-fluid bg-gray-dark text-light pt-2">
         {list.map(({ symbol, desc }, i) => (
@@ -41,6 +44,7 @@ export default function Custom() {
                     symbol={symbol}
                     interval={interval}
                     chartType={chartType}
+                    movingAverage={movingAverage}
                   />
                 </div>
               </div>

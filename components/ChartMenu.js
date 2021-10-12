@@ -3,6 +3,8 @@ export default function ChartMenu({
   setInterval,
   chartType,
   setChartType,
+  movingAverage,
+  setMovingAverage,
 }) {
   return (
     <div
@@ -50,6 +52,16 @@ export default function ChartMenu({
               <img src={`/icons/${t}.svg`} style={{ height: "100%" }} />
             </button>
           ))}
+        </div>
+      </div>
+      <div className="col-6 px-0 ">
+        <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+          <input
+            type="checkbox"
+            checked={movingAverage}
+            onClick={() => setMovingAverage(!movingAverage)}
+          />
+          Mov Avgs
         </div>
       </div>
     </div>

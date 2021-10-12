@@ -36,8 +36,10 @@ export default function InputMenu({ callback }) {
           Submit
         </button>
       </div>
-      <div className="col-6 px-2" style={{ textAlign: "right" }}>
-        GPC Candle Chart
+      <div className="col-6 px-2">
+        <div className="w-100 h-100 d-flex flex-row-reverse align-items-center">
+          GPC Candle Chart
+        </div>
       </div>
     </div>
   );

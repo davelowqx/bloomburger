@@ -1,10 +1,11 @@
 import React from "react";
 import { createChart, CrosshairMode } from "lightweight-charts";
 
-export default function Chart({ data, text, chartType }) {
+export default function Chart({ data, text, chartType, movingAverage }) {
   const divRef = React.useRef();
   const chartRef = React.useRef();
   const seriesRef = React.useRef();
+  const movingAverageRef = React.useRef();
 
   React.useEffect(() => {
     chartRef.current = createChart(divRef.current, {
@@ -36,7 +37,16 @@ export default function Chart({ data, text, chartType }) {
       },
       timeScale: {
         borderColor: "#fff",
+        rightOffset: 3,
       },
+    });
+
+    movingAverageRef.current = chartRef.current.addLineSeries({
+      color: "rgba(197, 203, 206, 0.5)",
+      lineWidth: 1,
+      crosshairMarkerVisible: false,
+      priceLineVisible: false,
+      lastValueVisible: false,
     });
 
     const handleResize = () => {
@@ -56,44 +66,59 @@ export default function Chart({ data, text, chartType }) {
   }, []);
 
   React.useEffect(() => {
-    if (seriesRef.current && chartRef.current) {
-      console.log("data or chartType changed");
+    if (!chartRef.current) {
+      return;
+    }
+    if (seriesRef.current) {
       chartRef.current.removeSeries(seriesRef.current);
     }
     switch (chartType) {
       case "area":
-        seriesRef.current = chartRef.current?.addAreaSeries({
+        seriesRef.current = chartRef.current.addAreaSeries({
           lineColor: "#fff",
           topColor: "rgba(150,245,255,0.5)",
           bottomColor: "rgba(30,105,200,0.5)",
           lineWidth: 2,
+          priceLineVisible: false,
         });
         break;
       case "line":
-        seriesRef.current = chartRef.current?.addLineSeries({
+        seriesRef.current = chartRef.current.addLineSeries({
           lineColor: "#fff",
         });
         break;
       case "candlestick":
-        seriesRef.current = chartRef.current?.addCandlestickSeries({
+        seriesRef.current = chartRef.current.addCandlestickSeries({
           upColor: "rgba(0,0,0,0)",
           downColor: "#0383fe",
           borderDownColor: "#0383fe",
           borderUpColor: "#fff",
           wickDownColor: "#fff",
           wickUpColor: "#fff",
+          priceLineVisible: false,
         });
         break;
       default:
         console.error(`invalid chartType: "${chartType}"`);
+        return;
     }
     seriesRef.current.setData(data);
-    chartRef.current?.applyOptions({
-      timeScale: {
-        rightOffset: 3,
-      },
-    });
   }, [data, chartType]);
+
+  React.useEffect(() => {
+    if (!chartRef.current) {
+      return;
+    }
+    let movingAverageData = [];
+    if (movingAverage) {
+      const t = 20;
+      for (let i = 0; i < data.length - t; i++) {
+        const k = data.slice(i, i + t).reduce((a, x) => a + x.value, 0);
+        movingAverageData.push({ time: data[i + t].time, value: k / t });
+      }
+    }
+    movingAverageRef.current.setData(movingAverageData);
+  }, [data, movingAverage]);
 
   return (
     <>
