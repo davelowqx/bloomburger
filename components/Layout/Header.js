@@ -1,12 +1,12 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import Link from "next/link";
 
 export default function Header({ children }) {
   const charts = [
     { path: "/lists/globalindices", label: "Global Indices" },
     { path: "/lists/usindices", label: "US Indices" },
     { path: "/lists/ussectors", label: "US Sectors" },
+    { path: "/lists/ussectorsdominance", label: "US Sectors Dominance" },
     { path: "/lists/credit", label: "Credit" },
     { path: "/lists/commodities", label: "Commodities" },
     { path: "/lists/currencies", label: "Currencies" },

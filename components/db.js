@@ -49,20 +49,31 @@ const parseAdrData = (adr, ord, fx, r) => {
 
 const parseBinaryData = (a, b, op) => {
   const data = [];
+
+  const am = a.reduce((accum, curr) => {
+    const dateStr = new Date(curr.time * 1000).toDateString();
+    return { ...accum, [dateStr]: curr };
+  }, {});
+  const bm = b.reduce((accum, curr) => {
+    const dateStr = new Date(curr.time * 1000).toDateString();
+    return { ...accum, [dateStr]: curr };
+  }, {});
+
   const f = (x, y) => (op === "/" ? x / y : op === "-" ? x - y : null);
-  let i = 0;
-  while (i < a.length && i < b.length) {
-    if (a[i].time === b[i].time) {
+
+  for (let key of Object.keys(am)) {
+    if (bm[key]) {
+      const open = f(am[key].open, bm[key].open);
+      const close = f(am[key].close, bm[key].close);
       data.push({
-        time: a[i].time,
-        open: f(a[i].open, b[i].open),
-        high: f(a[i].high, b[i].low),
-        low: f(a[i].low, b[i].high),
-        close: f(a[i].close, b[i].close),
-        value: f(a[i].close, b[i].close),
+        time: am[key].time,
+        open,
+        high: open > close ? open : close,
+        low: open < close ? open : close,
+        close,
+        value: close,
       });
     }
-    i++;
   }
   return data;
 };

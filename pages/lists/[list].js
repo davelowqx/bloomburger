@@ -25,6 +25,52 @@ export default function List() {
       { symbol: { sym: "XLV", mode: "standard" }, desc: "Healthcare" },
       { symbol: { sym: "XLRE", mode: "standard" }, desc: "Real Estate" },
     ],
+    ussectorsdominance: [
+      {
+        symbol: { mode: "binary", a: "XLE", b: "SPY", op: "/" },
+        desc: "Energy Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLF", b: "SPY", op: "/" },
+        desc: "Financials Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLK", b: "SPY", op: "/" },
+        desc: "Technology Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLY", b: "SPY", op: "/" },
+        desc: "Utilities Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLI", b: "SPY", op: "/" },
+        desc: "Industrials Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLY", b: "SPY", op: "/" },
+        desc: "Discretionary Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLP", b: "SPY", op: "/" },
+        desc: "Staples Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLC", b: "SPY", op: "/" },
+        desc: "Communication Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLB", b: "SPY", op: "/" },
+        desc: "Materials Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLV", b: "SPY", op: "/" },
+        desc: "Healthcare Dominance",
+      },
+      {
+        symbol: { mode: "binary", a: "XLRE", b: "SPY", op: "/" },
+        desc: "Real Estate Dominance",
+      },
+    ],
     usindices: [
       { symbol: { sym: "^NDX", mode: "standard" }, desc: "Nasdaq 100" },
       { symbol: { sym: "^GSPC", mode: "standard" }, desc: "S&P 500" },

@@ -17,13 +17,13 @@ export default function InputMenu({ callback }) {
       className="row bg-red text-light w-100 mx-0"
       style={{ height: "2rem" }}
     >
-      <div className="col-4 px-0">
+      <div className="col-3 px-0">
         <Form onSubmit={handleSubmit}>
           <input
             type="text"
             className="bg-yellow w-100 border-1 px-2"
             style={{ height: "2rem", position: "relative" }}
-            placeholder={`symbol`}
+            placeholder={`Symbol`}
             value={field}
             onChange={(event) =>
               setField(event.target.value.trim().toUpperCase())
@@ -36,7 +36,7 @@ export default function InputMenu({ callback }) {
           Submit
         </button>
       </div>
-      <div className="col-6 px-2">
+      <div className="col-7 px-2">
         <div className="w-100 h-100 d-flex flex-row-reverse align-items-center">
           GPC Candle Chart
         </div>
