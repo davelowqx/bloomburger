@@ -26,7 +26,7 @@ export default function ChartData({
   }, [symbol]);
 
   React.useEffect(async () => {
-    if ((range = "auto")) {
+    if (range === "auto") {
       range = ["1m"].includes(interval)
         ? "7d"
         : ["5m", "15m", "30m"].includes(interval)

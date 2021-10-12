@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function ChartMenu({
   interval,
   setInterval,
@@ -49,7 +51,7 @@ export default function ChartMenu({
               }`}
               onClick={() => setChartType(t)}
             >
-              <img src={`/icons/${t}.svg`} style={{ height: "100%" }} />
+              <Image src={`/icons/${t}.svg`} style={{ height: "100%" }} />
             </button>
           ))}
         </div>
