@@ -51,7 +51,7 @@ export default function ChartMenu({
               }`}
               onClick={() => setChartType(t)}
             >
-              <Image src={`/icons/${t}.svg`} style={{ height: "100%" }} />
+              <img src={`/icons/${t}.svg`} style={{ height: "100%" }} />
             </button>
           ))}
         </div>
