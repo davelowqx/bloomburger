@@ -38,6 +38,7 @@ export default function Chart({ data, text, chartType, movingAverage }) {
       timeScale: {
         borderColor: "#fff",
         rightOffset: 3,
+        timeVisible: true,
       },
     });
 
@@ -103,6 +104,11 @@ export default function Chart({ data, text, chartType, movingAverage }) {
         return;
     }
     seriesRef.current.setData(data);
+    chartRef.current.applyOptions({
+      timeScale: {
+        timeVisible: data[1].time - data[0].time < 86400,
+      },
+    });
   }, [data, chartType]);
 
   React.useEffect(() => {
