@@ -13,7 +13,7 @@ export default function Table({ columns, data, handleDelete }) {
     );
   return (
     <>
-      <BTable striped dark bordered responsive size="sm" {...getTableProps()}>
+      <BTable dark bordered responsive size="sm" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, i) => (
             <tr key={i} {...headerGroup.getHeaderGroupProps()}>
@@ -28,9 +28,9 @@ export default function Table({ columns, data, handleDelete }) {
                   <span>
                     {column.isSorted
                       ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
+                        ? "▼"
+                        : "▲"
+                      : "\u00A0\u00A0\u00A0"}
                   </span>
                 </th>
               ))}
@@ -42,24 +42,20 @@ export default function Table({ columns, data, handleDelete }) {
             prepareRow(row);
             return (
               <tr key={i} {...row.getRowProps()}>
-                {row.cells.map((cell, j) => {
-                  return (
-                    <>
-                      <td key={j} {...cell.getCellProps()}>
-                        {j === 0 && (
-                          <Button
-                            size="sm"
-                            variant="outline-danger"
-                            onClick={() => handleDelete(i)}
-                          >
-                            x
-                          </Button>
-                        )}
-                        {cell.render("Cell")}
-                      </td>
-                    </>
-                  );
-                })}
+                {row.cells.map((cell, j) => (
+                  <td key={j} {...cell.getCellProps()}>
+                    {j === 0 && handleDelete && (
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={() => handleDelete(i)}
+                      >
+                        x
+                      </Button>
+                    )}
+                    {cell.render("Cell")}
+                  </td>
+                ))}
               </tr>
             );
           })}

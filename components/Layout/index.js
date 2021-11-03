@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   return (
     <>
       <Header />
-      {children}
+      <div style={{ minHeight: "calc(100vh - 8rem)" }}>{children}</div>
       <Footer />
     </>
   );
