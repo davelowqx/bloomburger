@@ -52,8 +52,9 @@ export default function InputMenu({ callback }) {
               cursor: "pointer",
             }}
           >
-            {search.map(({ exchDisp, symbol, shortname }) => (
+            {search.map(({ exchDisp, symbol, shortname }, i) => (
               <div
+                key={i}
                 className="hover-bg-gray"
                 style={{ display: "flex" }}
                 onClick={() => {
