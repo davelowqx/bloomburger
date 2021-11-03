@@ -10,7 +10,7 @@ export default function ChartMenu({
 }) {
   return (
     <div
-      className="row bg-gray-light text-light w-100 mx-0"
+      className="row bg-gray-light text-white w-100 mx-0"
       style={{ height: "1.5rem", fontSize: "smaller" }}
     >
       <div className="col-5 px-0">
@@ -30,7 +30,7 @@ export default function ChartMenu({
             <button
               key={i}
               style={{ width: "10%", height: "1.5rem" }}
-              className={`text-light border-1  ${
+              className={`text-white border-1  ${
                 interval === t ? "bg-blue" : "bg-gray"
               }`}
               onClick={() => setInterval(t)}
@@ -45,13 +45,15 @@ export default function ChartMenu({
           {["candlestick", "area"].map((t, i) => (
             <button
               key={i}
-              style={{ width: "50%", height: "1.5rem" }}
-              className={`text-light border-1  ${
+              className={`text-white border-1  ${
                 chartType === t ? "bg-blue" : "bg-gray"
               }`}
               onClick={() => setChartType(t)}
             >
-              <img src={`/icons/${t}.svg`} style={{ height: "100%" }} />
+              <img
+                src={`/icons/${t}.svg`}
+                style={{ maxHeight: "100%", maxWidth: "80%" }}
+              />
             </button>
           ))}
         </div>

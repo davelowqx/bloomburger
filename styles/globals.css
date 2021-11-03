@@ -51,6 +51,18 @@ body {
   background-color: var(--black);
 }
 
+.text-white {
+  font: white;
+}
+
+.fw-light {
+  font-weight: 100;
+}
+
+:hover.hover-bg-gray {
+  background-color: var(--gray);
+}
+
 /* enclosing label */
 label.switch {
   position: absolute;

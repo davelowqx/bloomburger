@@ -28,7 +28,7 @@ export default function Custom() {
         movingAverage={movingAverage}
         setMovingAverage={setMovingAverage}
       />
-      <div className="container-fluid bg-gray-dark text-light pt-2">
+      <div className="container-fluid bg-gray-dark text-white pt-2">
         {list.map(({ symbol, desc }, i) => (
           <div key={i}>
             <div className="row px-3">
@@ -54,7 +54,7 @@ export default function Custom() {
         {!list.length && (
           <div
             style={{ height: "calc(100vh - 11rem)" }}
-            className="d-flex justify-content-center align-items-center text-light"
+            className="d-flex justify-content-center align-items-center text-white"
           >
             Your watchlist is empty. Add some symbols!
           </div>

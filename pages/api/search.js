@@ -5,17 +5,7 @@ export default async function handler(req, res) {
     ret.status(405).json({ error: "method not allowed" });
   }
 
-  const { symbol } = req.query;
-
-  const modules = [
-    "price",
-    "summaryProfile",
-    "incomeStatementHistory",
-    "incomeStatementHistoryQuarterly",
-    "cashflowStatementHistory",
-    "cashflowStatementHistoryQuarterly",
-    "balanceSheetHistoryQuarterly",
-  ];
+  const { q } = req.query;
 
   const handleError = (errorMessage) => {
     console.error(errorMessage);
@@ -29,7 +19,7 @@ export default async function handler(req, res) {
 
   https
     .get(
-      `${process.env.API_ENDPOINT}/v10/finance/quoteSummary/${symbol}?modules=${modules}`,
+      `${process.env.API_ENDPOINT}/v1/finance/search?q=${q}&quotesCount=5&newsCount=0`,
       (res) => {
         let raw = "";
 
@@ -37,11 +27,7 @@ export default async function handler(req, res) {
           raw += d;
         });
         res.on("end", () => {
-          const { result, error } = JSON.parse(raw).quoteSummary;
-          if (error) {
-            handleError(JSON.stringify(error));
-          }
-          handleSuccess(result[0]);
+          handleSuccess(JSON.parse(raw).quotes);
         });
       }
     )

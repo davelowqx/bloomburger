@@ -3,11 +3,10 @@ const fetchData = async (symbol, interval, range) => {
     `/api/charts/${symbol}?interval=${interval}&range=${range}`
   ).then((res) => res.json());
 
-  const { result, error } = data;
-  if (error) {
+  if (data?.error) {
     throw new Error(`${symbol}: ${error}`);
   } else {
-    return result;
+    return data;
   }
 };
 

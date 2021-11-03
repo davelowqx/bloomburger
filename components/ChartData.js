@@ -73,7 +73,7 @@ export default function ChartData({
   }, [interval, symbolMemo]);
 
   return (
-    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-gray text-light">
+    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-gray text-white">
       {loading && <div className="spinner-border secondary "></div>}
       {!loading && !error && (
         <Chart

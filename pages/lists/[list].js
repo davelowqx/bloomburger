@@ -187,7 +187,7 @@ export default function List() {
         movingAverage={movingAverage}
         setMovingAverage={setMovingAverage}
       />
-      <div className="container-fluid bg-gray-dark text-light pt-3">
+      <div className="container-fluid bg-gray-dark text-white pt-3">
         {lists[list]?.map(({ symbol, desc }, i) => (
           <div key={i}>
             <div className={"row px-3"}>

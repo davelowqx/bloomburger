@@ -9,12 +9,12 @@ export default async function handler(req, res) {
 
   const handleError = (errorMessage) => {
     console.error(errorMessage);
-    res.status(400).json({ result: [], error: errorMessage });
+    res.status(400).json({ error: errorMessage });
   };
 
   const handleSuccess = (data) => {
     console.log(data);
-    res.status(200).json({ result: data, error: null });
+    res.status(200).json(data);
   };
 
   https

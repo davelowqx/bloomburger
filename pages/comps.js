@@ -168,7 +168,7 @@ export default function Comps() {
 
   return (
     <Layout>
-      <div className="container-fluid text-light">
+      <div className="container-fluid text-white">
         <Container fluid>
           <Form onSubmit={handleSubmit}>
             <Row className="my-3">
@@ -310,8 +310,8 @@ const fetchAndParseData = async (symbol) => {
 
   return fetch(`/api/comps/${symbol}`)
     .then((res) => res.json())
-    .then(({ result, error }) => {
-      if (error) {
+    .then((json) => {
+      if (json?.error) {
         throw new Error(error.code);
       } else {
         const {
@@ -322,7 +322,7 @@ const fetchAndParseData = async (symbol) => {
           cashflowStatementHistory,
           cashflowStatementHistoryQuarterly,
           balanceSheetHistoryQuarterly,
-        } = result;
+        } = json;
 
         const incomeStatementAnnual =
           incomeStatementHistory.incomeStatementHistory
