@@ -3,6 +3,7 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import ChartMenu from "../../components/ChartMenu";
 import ChartData from "../../components/ChartData";
+import { debounce } from "lodash";
 
 export default function List() {
   const router = useRouter();
@@ -10,6 +11,11 @@ export default function List() {
   const [interval, setInterval] = React.useState("1d");
   const [chartType, setChartType] = React.useState("candlestick");
   const [movingAverage, setMovingAverage] = React.useState(false);
+  const [timeRange, setTimeRange] = React.useState();
+  const setTimeRangeDebounced = React.useCallback(
+    debounce(setTimeRange, 1000),
+    []
+  );
 
   const lists = {
     ussectors: [
@@ -204,6 +210,8 @@ export default function List() {
                     interval={interval}
                     chartType={chartType}
                     movingAverage={movingAverage}
+                    timeRange={timeRange}
+                    setTimeRange={setTimeRangeDebounced}
                   />
                 </div>
               </div>

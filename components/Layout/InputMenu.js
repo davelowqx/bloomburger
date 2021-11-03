@@ -1,9 +1,28 @@
 import React from "react";
 import { Form } from "react-bootstrap";
+import { debounce } from "lodash";
 
 export default function InputMenu({ callback }) {
   const [field, setField] = React.useState("");
-  const [search, setSearch] = React.useState([]);
+  const [searchResults, setSearchResults] = React.useState([]);
+
+  const handleSearchDebounced = React.useCallback(
+    debounce((q) => {
+      // console.log("searching:" + q);
+      if (q) {
+        fetch(`/api/search?q=${q}`)
+          .then((res) => res.json())
+          .then(setSearchResults);
+      }
+    }, 500),
+    []
+  );
+
+  React.useEffect(() => {
+    if (!field) {
+      setSearchResults([]);
+    }
+  }, [field]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -12,16 +31,6 @@ export default function InputMenu({ callback }) {
     }
     setField("");
   };
-
-  React.useEffect(() => {
-    if (field) {
-      fetch(`/api/search?q=${field}`)
-        .then((res) => res.json())
-        .then(setSearch);
-    } else {
-      setSearch([]);
-    }
-  }, [field]);
 
   return (
     <div
@@ -36,12 +45,14 @@ export default function InputMenu({ callback }) {
             style={{ height: "2rem", position: "relative" }}
             placeholder={`Symbol`}
             value={field}
-            onChange={(event) =>
-              setField(event.target.value.trim().toUpperCase())
-            }
+            onChange={(event) => {
+              const query = event.target.value.trim().toUpperCase();
+              setField(query);
+              handleSearchDebounced(query);
+            }}
           />
         </Form>
-        {!!search.length && (
+        {!!searchResults.length && (
           <div
             className="bg-gray-dark w-100"
             style={{
@@ -52,7 +63,7 @@ export default function InputMenu({ callback }) {
               cursor: "pointer",
             }}
           >
-            {search.map(({ exchDisp, symbol, shortname }, i) => (
+            {searchResults.map(({ exchDisp, symbol, shortname }, i) => (
               <div
                 key={i}
                 className="hover-bg-gray"

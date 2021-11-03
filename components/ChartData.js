@@ -13,6 +13,8 @@ export default function ChartData({
   range = "auto",
   chartType = "candlestick",
   movingAverage = false,
+  timeRange,
+  setTimeRange,
 }) {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
@@ -93,6 +95,8 @@ export default function ChartData({
               ? interval.substring(0, 2).toUpperCase()
               : interval
           })`}
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
         />
       )}
       {!loading && error && <div>{error}</div>}

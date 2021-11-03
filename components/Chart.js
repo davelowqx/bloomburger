@@ -1,7 +1,14 @@
 import React from "react";
 import { createChart, CrosshairMode } from "lightweight-charts";
 
-export default function Chart({ data, text, chartType, movingAverage }) {
+export default function Chart({
+  data,
+  text,
+  chartType,
+  movingAverage,
+  timeRange,
+  setTimeRange,
+}) {
   const divRef = React.useRef();
   const chartRef = React.useRef();
   const seriesRef = React.useRef();
@@ -59,12 +66,24 @@ export default function Chart({ data, text, chartType, movingAverage }) {
 
     handleResize();
     window.addEventListener("resize", handleResize);
+    if (setTimeRange) {
+      chartRef.current
+        .timeScale()
+        .subscribeVisibleTimeRangeChange(setTimeRange);
+    }
 
     return () => {
       window.removeEventListener("resize", handleResize);
       chartRef.current.remove();
     };
   }, []);
+
+  React.useEffect(() => {
+    if (!timeRange || !chartRef.current || !seriesRef.current) {
+      return;
+    }
+    chartRef.current.timeScale().setVisibleRange(timeRange);
+  }, [timeRange]);
 
   React.useEffect(() => {
     if (!chartRef.current) {
@@ -126,9 +145,5 @@ export default function Chart({ data, text, chartType, movingAverage }) {
     movingAverageRef.current.setData(movingAverageData);
   }, [data, movingAverage]);
 
-  return (
-    <>
-      <div className="w-100 h-100" ref={divRef} />
-    </>
-  );
+  return <div className="w-100 h-100" ref={divRef} />;
 }

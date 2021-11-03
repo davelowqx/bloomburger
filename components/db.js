@@ -50,15 +50,22 @@ const parseBinaryData = (a, b, op) => {
   const data = [];
 
   const am = a.reduce((accum, curr) => {
-    const dateStr = new Date(curr.time * 1000).toDateString();
-    return { ...accum, [dateStr]: curr };
+    return { ...accum, [curr.time]: curr };
   }, {});
   const bm = b.reduce((accum, curr) => {
-    const dateStr = new Date(curr.time * 1000).toDateString();
-    return { ...accum, [dateStr]: curr };
+    return { ...accum, [curr.time]: curr };
   }, {});
 
-  const f = (x, y) => (op === "/" ? x / y : op === "-" ? x - y : null);
+  const f = (x, y) =>
+    op === "/"
+      ? x / y
+      : op === "-"
+      ? x - y
+      : op === "*"
+      ? x * y
+      : op === "+"
+      ? x + y
+      : null;
 
   for (let key of Object.keys(am)) {
     if (bm[key]) {
