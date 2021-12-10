@@ -52,9 +52,9 @@ export default function Comps() {
         addlSymbols.map((symbol) => fetchAndParseData(symbol))
       );
       setData([...data, ...addlData]);
-      const symbols = [...symbols, ...addlSymbols];
-      localStorage.setItem("symbols", JSON.stringify(symbols));
-      setSymbols(symbols);
+      const newSymbols = [...symbols, ...addlSymbols];
+      localStorage.setItem("symbols", JSON.stringify(newSymbols));
+      setSymbols(newSymbols);
     } catch (error) {
       setError(error.message);
     } finally {
