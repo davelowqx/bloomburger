@@ -6,13 +6,13 @@ Of course I'll not be able to actually replicate the complete feature set offere
 
 - Candlestick Charts, Bloomberg style
 - Chart Lists
-  - provide a broad overview of the markets
+  - provide a macro view of the markets
 - Indices/ETF components
-  - to view the components of the major Indices/ETFs and other useful details
+  - to view the components of the major Indices/ETFs
 - Comps
-  - a table displaying commonly quoted valuation metrics, such as P/S, P/E, P/FCF
+  - screen for commonly quoted valuation metrics, such as Price to Sales and Price to Earnings
 - ADR Charts
-  - since ADRs trade in 2 separate sessions (eg $BABA trades US and HK), I thought it would be useful to chart them combined, adjusted for the exchange rate and conversion ratio
+  - since ADRs trade in 2 separate sessions every day (eg $BABA trades US and HK), I thought it would be useful to chart them together, adjusted for the exchange rate and conversion ratio
 
 ### Built With
 
@@ -25,12 +25,7 @@ Of course I'll not be able to actually replicate the complete feature set offere
 ## Roadmap
 
 - Add ability to save watchlists
-- Add more Indices/ETFs and have them updated via API calls
-- Anything else that pops in my mind
-
-## Contributing
-
-Feel free to open PRs to add to the application.
+- Add more Indices/ETFs and update them via API calls
 
 ## License
 
@@ -39,4 +34,5 @@ Distributed under the GPL License.
 ## Acknowledgements
 
 Data from Yahoo Finance
+
 Design inspired by Bloomberg
