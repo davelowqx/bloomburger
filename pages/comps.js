@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Alert, Container, Form, Row, Spinner } from "react-bootstrap";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
+import { numberFormat } from "../utils";
+import { round } from "lodash";
 
 export default function Comps() {
   const [data, setData] = React.useState([]);
@@ -10,10 +12,6 @@ export default function Comps() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
 
-  React.useEffect(() => {
-    localStorage.setItem("symbols", JSON.stringify(symbols));
-  }, [symbols]);
-
   React.useEffect(async () => {
     const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
     console.log("stored:" + symbolsStored);
@@ -21,11 +19,12 @@ export default function Comps() {
     setLoading(true);
     try {
       const data = await Promise.all(
-        symbols.map((symbol) => fetchAndParseData(symbol))
+        symbolsStored.map((symbol) => fetchAndParseData(symbol))
       );
       setData(data);
     } catch (error) {
       setError(error.message);
+      localStorage.setItem("symbols", JSON.stringify([]));
     } finally {
       setLoading(false);
     }
@@ -53,7 +52,9 @@ export default function Comps() {
         addlSymbols.map((symbol) => fetchAndParseData(symbol))
       );
       setData([...data, ...addlData]);
-      setSymbols([...symbols, ...addlSymbols]);
+      const symbols = [...symbols, ...addlSymbols];
+      localStorage.setItem("symbols", JSON.stringify(symbols));
+      setSymbols(symbols);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -75,37 +76,33 @@ export default function Comps() {
       Header: "Basic",
       columns: [
         { Header: "Symbol", accessor: "symbol" },
+        { Header: "Name", accessor: "name" },
         { Header: "Sector", accessor: "sector" },
         { Header: "Industry", accessor: "industry" },
+        { Header: "Market Cap", accessor: "marketCap" },
       ],
     },
     {
-      Header: "TTM Ratios",
+      Header: "TTM Multiples",
       columns: [
         { Header: "P/S", accessor: "priceToSalesTTM" },
         { Header: "P/GP", accessor: "priceToGrossProfitTTM" },
-        { Header: "P/FCF", accessor: "priceToFCFTTM" },
         { Header: "P/E", accessor: "priceToEarningsTTM" },
       ],
     },
     {
-      Header: "LFY Ratios",
+      Header: "LFY Multiples",
       columns: [
         { Header: "P/S", accessor: "priceToSalesLFY" },
         { Header: "P/GP", accessor: "priceToGrossProfitLFY" },
-        { Header: "P/FCF", accessor: "priceToFCFLFY" },
         { Header: "P/E", accessor: "priceToEarningsLFY" },
-        { Header: "Revenue Growth % YoY", accessor: "revenueGrowth" },
-        { Header: "Earnings Growth % YoY", accessor: "earningsGrowth" },
       ],
     },
     {
-      Header: "Valuation",
+      Header: "Growth YoY",
       columns: [
-        { Header: "Market Cap", accessor: "marketCap" },
-        { Header: "- Cash & Eqv.", accessor: "cashAndEqv" },
-        { Header: "+ Total Debt", accessor: "totalDebt" },
-        { Header: "Enterprise Value", accessor: "enterpriseValue" },
+        { Header: "Revenue", accessor: "revenueGrowth" },
+        { Header: "Earnings", accessor: "earningsGrowth" },
       ],
     },
     {
@@ -113,10 +110,8 @@ export default function Comps() {
       columns: [
         { Header: "Revenue", accessor: "totalRevenueTTM" },
         { Header: "Gross Profit", accessor: "grossProfitTTM" },
-        { Header: "Gross Margin %", accessor: "grossMarginTTM" },
+        { Header: "Gross Margin", accessor: "grossMarginTTM" },
         { Header: "Operating Income", accessor: "operatingIncomeTTM" },
-        { Header: "EBITDA", accessor: "ebitdaTTM" },
-        { Header: "EBIT", accessor: "ebitTTM" },
         { Header: "Net Income", accessor: "netIncomeTTM" },
       ],
     },
@@ -125,44 +120,10 @@ export default function Comps() {
       columns: [
         { Header: "Revenue", accessor: "totalRevenue0" },
         { Header: "Gross Profit", accessor: "grossProfit0" },
-        { Header: "Gross Margin %", accessor: "grossMargin0" },
+        { Header: "Gross Margin", accessor: "grossMargin0" },
         { Header: "Operating Income", accessor: "operatingIncome0" },
-        { Header: "EBITDA", accessor: "ebitda0" },
-        { Header: "EBIT", accessor: "ebit0" },
         { Header: "Net Income", accessor: "netIncome0" },
       ],
-    },
-    {
-      Header: "Cash Flow Statement TTM",
-      columns: [
-        {
-          Header: "CFO",
-          accessor: "totalCashFromOperatingActivitiesTTM",
-        },
-        { Header: "FCF", accessor: "FCFTTM" },
-      ],
-    },
-    {
-      Header: "Cash Flow Statement LFY",
-      columns: [
-        {
-          Header: "CFO",
-          accessor: "totalCashFromOperatingActivities0",
-        },
-        { Header: "FCF", accessor: "FCF0" },
-      ],
-    },
-    // {
-    //   Header: "CFF TTM",
-    //   accessor: "totalCashFromFinancingActivitiesTTM",
-    // },
-    // {
-    //   Header: "CFI TTM",
-    //   accessor: "totalCashflowsFromInvestingActivitiesTTM",
-    // },
-    {
-      Header: "Balance Sheet MRQ",
-      columns: [{ Header: "Current Ratio", accessor: "currentRatio" }],
     },
   ];
 
@@ -217,7 +178,7 @@ export default function Comps() {
 }
 
 const fetchAndParseData = async (symbol) => {
-  const sumAcrossObjects = (accum, curr, index) => {
+  const sumAcrossObjects = (accum, curr) => {
     for (let key in accum) {
       if (key !== "endDate" && accum[key] !== 0) {
         accum[key] += curr[key];
@@ -268,188 +229,80 @@ const fetchAndParseData = async (symbol) => {
     return ret;
   };
 
-  const cashFlowStatementSchema = (obj) => {
-    const fields = [
-      "endDate",
-      "depreciation",
-      "capitalExpenditures",
-      // "investments",
-      // "netBorrowings",
-      "totalCashFromOperatingActivities",
-      "totalCashflowsFromInvestingActivities",
-      "totalCashFromFinancingActivities",
-    ];
-    const ret = { endDate: obj.endDate.fmt };
-    fields.forEach((field) => {
-      ret[field] = getRaw(obj, field);
-    });
-    return ret;
-  };
-
-  const balanceSheetSchema = (obj) => {
-    const fields = [
-      // "cash",  // cash & eqv === CA - inv - otherCurrentAssets - receivalbles - othershortterminvestments
-      "netReceivables",
-      "shortTermInvestments",
-      "shortLongTermDebt",
-      "otherCurrentAssets",
-      "inventory",
-      "longTermDebt",
-      "totalCurrentAssets",
-      "totalCurrentLiabilities",
-      "totalAssets",
-      "totalLiab",
-      "totalStockholderEquity",
-    ];
-    const ret = {};
-    fields.forEach((field) => {
-      ret[field] = getRaw(obj, field);
-    });
-    return ret;
-  };
-
   return fetch(`/api/comps/${symbol}`)
     .then((res) => res.json())
     .then((json) => {
       if (json?.error) {
         throw new Error(error.code);
-      } else {
-        const {
-          price,
-          summaryProfile,
-          incomeStatementHistoryQuarterly,
-          incomeStatementHistory,
-          cashflowStatementHistory,
-          cashflowStatementHistoryQuarterly,
-          balanceSheetHistoryQuarterly,
-        } = json;
-
-        const incomeStatementAnnual =
-          incomeStatementHistory.incomeStatementHistory
-            .map(incomeStatementSchema)
-            .map((obj, i) => addKeySuffix(obj, i))
-            .reduce(mergeObjects);
-
-        const incomeStatementTTM = addKeySuffix(
-          incomeStatementHistoryQuarterly.incomeStatementHistory
-            .map(incomeStatementSchema)
-            .reduce(sumAcrossObjects),
-          "TTM"
-        );
-
-        const cashFlowStatementAnnual =
-          cashflowStatementHistory.cashflowStatements
-            .map(cashFlowStatementSchema)
-            .map((obj, i) => addKeySuffix(obj, i))
-            .reduce(mergeObjects);
-
-        const cashFlowStatementTTM = addKeySuffix(
-          cashflowStatementHistoryQuarterly.cashflowStatements
-            .map(cashFlowStatementSchema)
-            .reduce(sumAcrossObjects),
-          "TTM"
-        );
-
-        const balanceSheetMRQ =
-          balanceSheetHistoryQuarterly.balanceSheetStatements.map(
-            balanceSheetSchema
-          )[0];
-
-        const basic = {
-          symbol: symbol.toUpperCase(),
-          name: price.longName,
-          sector: summaryProfile.sector,
-          industry: summaryProfile.industry,
-          marketCap: price.marketCap.raw,
-        };
-        const { grossProfitTTM, totalRevenueTTM, ebitTTM, netIncomeTTM } =
-          incomeStatementTTM;
-        const { marketCap } = basic;
-        const {
-          totalRevenue0,
-          totalRevenue1,
-          grossProfit0,
-          netIncome0,
-          netIncome1,
-        } = incomeStatementAnnual;
-        const {
-          depreciationTTM,
-          capitalExpendituresTTM,
-          totalCashFromOperatingActivitiesTTM,
-        } = cashFlowStatementTTM;
-        const { capitalExpenditures0, totalCashFromOperatingActivities0 } =
-          cashFlowStatementAnnual;
-        const {
-          totalCurrentAssets,
-          totalCurrentLiabilities,
-          shortLongTermDebt,
-          longTermDebt,
-          otherCurrentAssets,
-          netReceivables,
-          shortTermInvestments,
-          inventory,
-        } = balanceSheetMRQ;
-
-        const cashAndEqv =
-          totalCurrentAssets -
-          inventory -
-          otherCurrentAssets -
-          netReceivables -
-          shortTermInvestments;
-
-        const totalDebt = shortLongTermDebt + longTermDebt; // + commercial paper???
-        const FCFTTM =
-          totalCashFromOperatingActivitiesTTM - capitalExpendituresTTM;
-        const FCF0 = totalCashFromOperatingActivities0 - capitalExpenditures0;
-
-        const roundToOneDP = (x) => parseFloat(x.toFixed(1));
-
-        const data = {
-          ...basic,
-          ...incomeStatementAnnual,
-          ...incomeStatementTTM,
-          ...cashFlowStatementAnnual,
-          ...cashFlowStatementTTM,
-          ...balanceSheetMRQ,
-          revenueGrowth: roundToOneDP(
-            (totalRevenue0 / totalRevenue1 - 1) * 100
-          ),
-          earningsGrowth: roundToOneDP((netIncome0 / netIncome1 - 1) * 100),
-          grossMarginTTM: roundToOneDP(grossProfitTTM / totalRevenueTTM) * 100,
-          grossMargin0: roundToOneDP(grossProfit0 / totalRevenue0) * 100,
-          priceToSalesTTM: roundToOneDP(marketCap / totalRevenueTTM),
-          priceToGrossProfitTTM: roundToOneDP(marketCap / grossProfitTTM),
-          priceToFCFTTM: roundToOneDP(marketCap / FCFTTM),
-          priceToEarningsTTM: roundToOneDP(marketCap / netIncomeTTM),
-          priceToSalesLFY: roundToOneDP(marketCap / totalRevenue0),
-          priceToGrossProfitLFY: roundToOneDP(marketCap / grossProfit0),
-          priceToFCFLFY: roundToOneDP(marketCap / FCF0),
-          priceToEarningsLFY: roundToOneDP(marketCap / netIncome0),
-          ebitdaTTM: ebitTTM + depreciationTTM,
-          FCFTTM,
-          FCF0,
-          currentRatio: roundToOneDP(
-            totalCurrentAssets / totalCurrentLiabilities
-          ),
-          totalDebt,
-          cashAndEqv,
-          enterpriseValue: marketCap - cashAndEqv + totalDebt,
-        };
-
-        for (let key in data) {
-          if (
-            key !== "symbol" &&
-            key !== "sector" &&
-            key !== "name" &&
-            key !== "industry"
-          ) {
-            if (typeof data[key] !== "number") {
-              console.log(`(${key})`, data[key]);
-              data[key] = "-";
-            }
-          }
-        }
-        return data;
       }
+      const {
+        price,
+        summaryProfile,
+        incomeStatementHistoryQuarterly,
+        incomeStatementHistory,
+      } = json;
+
+      const incomeStatementAnnual =
+        incomeStatementHistory.incomeStatementHistory
+          .map(incomeStatementSchema)
+          .map((obj, i) => addKeySuffix(obj, i))
+          .reduce(mergeObjects);
+
+      const incomeStatementTTM = addKeySuffix(
+        incomeStatementHistoryQuarterly.incomeStatementHistory
+          .map(incomeStatementSchema)
+          .reduce(sumAcrossObjects),
+        "TTM"
+      );
+
+      const marketCap = price.marketCap.raw;
+
+      const {
+        grossProfitTTM,
+        totalRevenueTTM,
+        netIncomeTTM,
+        operatingIncomeTTM,
+      } = incomeStatementTTM;
+
+      const {
+        totalRevenue0,
+        totalRevenue1,
+        grossProfit0,
+        netIncome0,
+        netIncome1,
+        operatingIncome0,
+      } = incomeStatementAnnual;
+
+      const data = {
+        symbol: symbol.toUpperCase(),
+        name: price.longName,
+        sector: summaryProfile.sector,
+        industry: summaryProfile.industry,
+        revenueGrowth: round((totalRevenue0 * 100) / totalRevenue1) - 100 + "%",
+        earningsGrowth: round((netIncome0 * 100) / netIncome1) - 100 + "%",
+        grossMarginTTM: round((grossProfitTTM * 100) / totalRevenueTTM) + "%",
+        grossMargin0: round((grossProfit0 * 100) / totalRevenue0) + "%",
+        priceToSalesTTM: round(marketCap / totalRevenueTTM, 1),
+        priceToGrossProfitTTM: round(marketCap / grossProfitTTM, 1),
+        priceToEarningsTTM: round(marketCap / netIncomeTTM, 1),
+        priceToSalesLFY: round(marketCap / totalRevenue0, 1),
+        priceToGrossProfitLFY: round(marketCap / grossProfit0, 1),
+        priceToEarningsLFY: round(marketCap / netIncome0, 1),
+        marketCap: numberFormat(marketCap),
+        totalRevenue0: numberFormat(totalRevenue0),
+        totalRevenue1: numberFormat(totalRevenue1),
+        grossProfit0: numberFormat(grossProfit0),
+        operatingIncome0: numberFormat(operatingIncome0),
+        netIncome0: numberFormat(netIncome0),
+        netIncome1: numberFormat(netIncome1),
+        grossProfitTTM: numberFormat(grossProfitTTM),
+        totalRevenueTTM: numberFormat(totalRevenueTTM),
+        netIncomeTTM: numberFormat(netIncomeTTM),
+        operatingIncomeTTM: numberFormat(operatingIncomeTTM),
+      };
+
+      console.log(data);
+
+      return data;
     });
 };

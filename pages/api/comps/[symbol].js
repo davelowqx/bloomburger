@@ -12,9 +12,6 @@ export default async function handler(req, res) {
     "summaryProfile",
     "incomeStatementHistory",
     "incomeStatementHistoryQuarterly",
-    "cashflowStatementHistory",
-    "cashflowStatementHistoryQuarterly",
-    "balanceSheetHistoryQuarterly",
   ];
 
   const handleError = (errorMessage) => {

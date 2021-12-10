@@ -12,7 +12,7 @@ const fetchData = async (symbol, interval, range) => {
 
 const parseAdrData = (adr, ord, fx, r) => {
   const fxmap = fx.reduce((accum, curr) => {
-    const dateStr = new Date(curr.time * 1000).toDateString();
+    const dateStr = curr.time - (curr.time % (24 * 60 * 60));
     return { ...accum, [dateStr]: curr.open };
   }, {});
 
@@ -30,7 +30,7 @@ const parseAdrData = (adr, ord, fx, r) => {
       i++;
     } else if (i === adr.length || adr[i].time > ord[j].time) {
       const time = ord[j].time;
-      const dateStr = new Date(time * 1000).toDateString();
+      const dateStr = time - (time % (24 * 60 * 60));
       const adj = r * fxmap[dateStr];
       data.push({
         time: ord[j].time,
