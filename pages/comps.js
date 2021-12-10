@@ -13,15 +13,15 @@ export default function Comps() {
   const [error, setError] = React.useState("");
 
   React.useEffect(async () => {
-    const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
-    console.log("stored:" + symbolsStored);
-    setSymbols(symbolsStored);
-    setLoading(true);
     try {
+      const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
+      console.log("stored:" + symbolsStored);
+      setLoading(true);
       const data = await Promise.all(
         symbolsStored.map((symbol) => fetchAndParseData(symbol))
       );
       setData(data);
+      setSymbols(symbolsStored);
     } catch (error) {
       setError(error.message);
       localStorage.setItem("symbols", JSON.stringify([]));
