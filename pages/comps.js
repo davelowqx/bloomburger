@@ -30,6 +30,11 @@ export default function Comps() {
     }
   }, []);
 
+  const setAndPersistSymbols = (symbols) => {
+    localStorage.setItem("symbols", JSON.stringify(symbols));
+    setSymbols(symbols);
+  };
+
   const handleInput = (event) => {
     setInput(event.target.value);
   };
@@ -53,8 +58,7 @@ export default function Comps() {
       );
       setData([...data, ...addlData]);
       const newSymbols = [...symbols, ...addlSymbols];
-      localStorage.setItem("symbols", JSON.stringify(newSymbols));
-      setSymbols(newSymbols);
+      setAndPersistSymbols(newSymbols);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -64,7 +68,7 @@ export default function Comps() {
 
   const handleDelete = (i) => {
     setData([...data.slice(0, i), ...data.slice(i + 1, data.length)]);
-    setSymbols([
+    setAndPersistSymbols([
       ...symbols.slice(0, i),
       ...symbols.slice(i + 1, symbols.length),
     ]);
