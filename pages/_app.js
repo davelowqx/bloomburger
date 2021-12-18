@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content="#000000" />
         <meta
           name="description"
-          content="When Wendys' found a Bloomberg Terminal"
+          content="Like Wendy's found a Bloomberg Terminal"
         />
         <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
         <link
