@@ -19,7 +19,7 @@ export default function Header({ children }) {
       <Navbar variant="dark">
         <Navbar.Brand href={"/"}>
           <div className="brand d-flex align-items-center">
-            <img src="/icon.png" style={{ width: "1.5rem" }} />
+            <img src="/icon.png" alt="brand logo" style={{ width: "1.5rem" }} />
             loomburger
           </div>
         </Navbar.Brand>
