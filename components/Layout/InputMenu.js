@@ -54,30 +54,27 @@ export default function InputMenu({ callback }) {
         </Form>
         {!!searchResults.length && (
           <div
-            className="bg-gray-dark w-100"
+            className="bg-gray-dark col-3 position-absolute start-0"
             style={{
-              position: "absolute",
-              top: "2rem",
-              left: 0,
-              zIndex: "50",
+              top: "5.5rem",
               cursor: "pointer",
+              zIndex: 10,
             }}
           >
             {searchResults.map(({ exchDisp, symbol, shortname }, i) => (
               <div
                 key={i}
-                className="hover-bg-gray"
-                style={{ display: "flex" }}
+                className="hover-bg-gray d-flex"
                 onClick={() => {
                   setField(symbol);
                   callback(symbol);
                   setField("");
                 }}
               >
-                <div className="col-3 py-1">{`${
+                <div className="col-2 py-1 px-2">{`${
                   symbol.length > 8 ? symbol.substring(0, 8) + "..." : symbol
                 }`}</div>
-                <div className="col-9 py-1 fw-light">{`${shortname} (${exchDisp})`}</div>
+                <div className="col-10 py-1 px-2 fw-light">{`${shortname} (${exchDisp})`}</div>
               </div>
             ))}
           </div>

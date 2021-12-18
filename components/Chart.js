@@ -44,7 +44,7 @@ export default function Chart({
       },
       timeScale: {
         borderColor: "#fff",
-        rightOffset: 3,
+        rightOffset: 7,
         timeVisible: true,
       },
     });

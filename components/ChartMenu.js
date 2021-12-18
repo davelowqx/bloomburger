@@ -65,7 +65,7 @@ export default function ChartMenu({
             checked={movingAverage}
             onClick={() => setMovingAverage(!movingAverage)}
           />
-          Mov Avgs
+          &nbsp;Mov Avgs
         </div>
       </div>
     </div>

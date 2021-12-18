@@ -13,8 +13,8 @@ export default function Table({ columns, data, handleDelete }) {
     );
   return (
     <>
-      <BTable dark bordered responsive size="sm" {...getTableProps()}>
-        <thead>
+      <BTable responsive size="sm" {...getTableProps()}>
+        <thead style={{ backgroundColor: "lightgray" }} className="text-center">
           {headerGroups.map((headerGroup, i) => (
             <tr key={i} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, j) => (
@@ -23,21 +23,20 @@ export default function Table({ columns, data, handleDelete }) {
                 <th
                   key={j}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  style={{ borderColor: "lightslategray" }}
                 >
                   {column.render("Header")}
                   <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? "▼"
-                        : "▲"
-                      : "\u00A0\u00A0\u00A0"}
+                    {`${
+                      column.isSorted ? (column.isSortedDesc ? "▼" : "▲") : ""
+                    }`}
                   </span>
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
+        <tbody {...getTableBodyProps()} className="text-end">
           {rows.map((row, i) => {
             prepareRow(row);
             return (

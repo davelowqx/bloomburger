@@ -74,15 +74,21 @@ export default function Comps() {
     ]);
   };
 
+  const Cell = (row) => <div className="text-center">{row.value}</div>;
+
   const columns = [
-    { Header: "", accessor: "x" },
+    { Header: "x", accessor: "x" },
     {
       Header: "Basic",
       columns: [
-        { Header: "Symbol", accessor: "symbol" },
-        { Header: "Name", accessor: "name" },
-        { Header: "Sector", accessor: "sector" },
-        { Header: "Industry", accessor: "industry" },
+        {
+          Header: "Symbol",
+          accessor: "symbol",
+          Cell,
+        },
+        { Header: "Name", accessor: "name", Cell },
+        { Header: "Sector", accessor: "sector", Cell },
+        { Header: "Industry", accessor: "industry", Cell },
         { Header: "Market Cap", accessor: "marketCap" },
       ],
     },
@@ -133,50 +139,46 @@ export default function Comps() {
 
   return (
     <Layout>
-      <div className="container-fluid text-white">
-        <Container fluid>
-          <Form onSubmit={handleSubmit}>
-            <Row className="my-3">
-              <div className="col-11">
-                <Form.Control
-                  value={input}
-                  type="text"
-                  size="sm"
-                  placeholder="Symbol (AAPL, GOOG, AMZN)"
-                  disabled={loading}
-                  onChange={handleInput}
-                />
-              </div>
-              <div className="col-1">
-                <Button
-                  block
-                  variant={loading ? "secondary" : "success"}
-                  size="sm"
-                  disabled={loading}
-                  type="submit"
-                >
-                  {loading ? (
-                    <Spinner
-                      as="span"
-                      role="status"
-                      size="sm"
-                      animation="border"
-                    />
-                  ) : (
-                    <span>+</span>
-                  )}
-                </Button>
-              </div>
-            </Row>
-          </Form>
-          <Row className="justify-content-center">
-            <Alert variant="danger" show={!!error}>
-              {error}
-            </Alert>
+      <Container fluid>
+        <Form onSubmit={handleSubmit}>
+          <Row className="my-3">
+            <div className="col-11">
+              <Form.Control
+                value={input}
+                type="text"
+                size="sm"
+                placeholder="Symbol (AAPL, GOOG, AMZN)"
+                disabled={loading}
+                onChange={handleInput}
+              />
+            </div>
+            <div className="col-1">
+              <Button
+                variant={loading ? "secondary" : "success"}
+                size="sm"
+                disabled={loading}
+                type="submit"
+                className="w-100"
+              >
+                {loading ? (
+                  <Spinner
+                    as="span"
+                    role="status"
+                    size="sm"
+                    animation="border"
+                  />
+                ) : (
+                  <span>+</span>
+                )}
+              </Button>
+            </div>
           </Row>
-          <Table columns={columns} data={data} handleDelete={handleDelete} />
-        </Container>
-      </div>
+        </Form>
+        <Alert variant="danger" show={!!error}>
+          {error}
+        </Alert>
+        <Table columns={columns} data={data} handleDelete={handleDelete} />
+      </Container>
     </Layout>
   );
 }

@@ -21,7 +21,6 @@ export default function Adr() {
     LFC: { adr: "LFC", ord: "2628.HK", fx: "HKDUSD=X", r: 5 },
     ASX: { adr: "ASX", ord: "3711.TW", fx: "TWDUSD=X", r: 2 },
     IMOS: { adr: "IMOS", ord: "8150.TW", fx: "TWDUSD=X", r: 20 },
-    TSM: { adr: "TSM", ord: "2330.TW", fx: "TWDUSD=X", r: 5 },
     UMC: { adr: "UMC", ord: "2303.TW", fx: "TWDUSD=X", r: 5 },
     LPL: { adr: "LPL", ord: "034220.KS", fx: "KRWUSD=X", r: 0.5 },
   };

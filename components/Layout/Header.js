@@ -1,8 +1,7 @@
 import React from "react";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 
 export default function Header({ children }) {
-  const indices = [{ path: "/indices/ndx", label: "Nasdaq 100" }];
   const charts = [
     { path: "/lists/globalindices", label: "Global Indices" },
     { path: "/lists/usindices", label: "US Indices" },
@@ -16,12 +15,15 @@ export default function Header({ children }) {
   ];
 
   return (
-    <div className="bg-black">
+    <div className="bg-black px-3">
       <Navbar variant="dark">
         <Navbar.Brand href={"/"}>
-          <div className="brand">Bloomburger</div>
+          <div className="brand d-flex align-items-center">
+            <img src="/icon.png" style={{ width: "1.5rem" }} />
+            loomburger
+          </div>
         </Navbar.Brand>
-        <Nav className="mr-auto">
+        <Nav>
           <NavDropdown
             title="Charts"
             id="basic-nav-dropdown"
@@ -35,23 +37,11 @@ export default function Header({ children }) {
             <NavDropdown.Divider />
             <NavDropdown.Item href={"/lists/custom"}>Custom</NavDropdown.Item>
           </NavDropdown>
-          <NavDropdown
-            title="Indices"
-            id="basic-nav-dropdown"
-            menuvariant="dark"
-          >
-            {indices.map(({ path, label }, i) => (
-              <NavDropdown.Item key={i} href={path}>
-                {label}
-              </NavDropdown.Item>
-            ))}
-          </NavDropdown>
           <Nav.Link href={"/comps"}>Comps</Nav.Link>
           <Nav.Link href={"/adr"}>ADR</Nav.Link>
         </Nav>
-        <Nav className="ml-auto">
-          <Nav.Item>{children}</Nav.Item>
-        </Nav>
+        <div className="flex-grow-1" />
+        <Nav.Item>{children}</Nav.Item>
       </Navbar>
     </div>
   );

@@ -9,13 +9,8 @@
 }
 
 @font-face {
-  font-family: "Bloomberg LogoTypes-Medium";
-  src: url("/fonts/Bloomberg-Logotypes-Medium-0e53877b78.woff2");
-}
-
-@font-face {
-  font-family: "Roadgeek 2005 Series 2w";
-  src: url("/fonts/roadgeek-2005-series-2w.ttf");
+  font-family: "brand";
+  src: url("/fonts/metropolis_black.otf");
 }
 
 body {
@@ -23,7 +18,7 @@ body {
 }
 
 .brand {
-  font-family: "Bloomberg LogoTypes-Medium";
+  font-family: "brand";
 }
 
 .bg-yellow {
