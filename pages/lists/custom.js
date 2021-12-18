@@ -8,16 +8,37 @@ export default function Custom() {
   const [interval, setInterval] = React.useState("1d");
   const [chartType, setChartType] = React.useState("candlestick");
   const [movingAverage, setMovingAverage] = React.useState(false);
-  const [list, setList] = React.useState([]);
+  const [symbols, setSymbols] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState();
+
+  React.useEffect(async () => {
+    try {
+      const symbolsStored = JSON.parse(localStorage.getItem("watchlist"));
+      console.log("stored:" + symbolsStored);
+      setLoading(true);
+      setSymbols(symbolsStored);
+    } catch (error) {
+      setError(error.message);
+      localStorage.setItem("watchlist", JSON.stringify([]));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const setAndPersistSymbols = (symbols) => {
+    console.log(symbols);
+    localStorage.setItem("watchlist", JSON.stringify(symbols));
+    setSymbols(symbols);
+  };
 
   return (
     <Layout>
       <InputMenu
         callback={(field) =>
-          setList([
-            ...list,
-            { symbol: { sym: field, mode: "standard" }, desc: "" },
-          ])
+          !symbols.includes(field)
+            ? setAndPersistSymbols([...symbols, field])
+            : null
         }
       />
       <ChartMenu
@@ -29,19 +50,32 @@ export default function Custom() {
         setMovingAverage={setMovingAverage}
       />
       <div className="container-fluid bg-gray-dark text-white pt-2">
-        {list.map(({ symbol, desc }, i) => (
+        {symbols.map((symbol, i) => (
           <div key={i}>
-            <div className="row px-3">
-              <h6>{desc}</h6>
-            </div>
             <div className="row">
-              <div className={"col-12 mb-2 px-3"}>
+              <div className="col-12 mb-2 px-3">
+                <button
+                  className="position-absolute bg-yellow"
+                  style={{
+                    zIndex: 10,
+                    height: "fit-content",
+                    right: "1rem",
+                  }}
+                  onClick={() =>
+                    setAndPersistSymbols([
+                      ...symbols.slice(0, i),
+                      ...symbols.slice(i + 1),
+                    ])
+                  }
+                >
+                  x
+                </button>
                 <div
                   className="w-100 d-flex justify-content-center align-items-center "
                   style={{ height: "83vh" }}
                 >
                   <ChartData
-                    symbol={symbol}
+                    symbol={{ sym: symbol, mode: "standard" }}
                     interval={interval}
                     chartType={chartType}
                     movingAverage={movingAverage}
@@ -51,7 +85,7 @@ export default function Custom() {
             </div>
           </div>
         ))}
-        {!list.length && (
+        {!symbols.length && (
           <div
             style={{ height: "calc(100vh - 11rem)" }}
             className="d-flex justify-content-center align-items-center text-white"

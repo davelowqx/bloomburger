@@ -14,7 +14,7 @@ export default function Comps() {
 
   React.useEffect(async () => {
     try {
-      const symbolsStored = JSON.parse(localStorage.getItem("symbols"));
+      const symbolsStored = JSON.parse(localStorage.getItem("comps"));
       console.log("stored:" + symbolsStored);
       setLoading(true);
       const data = await Promise.all(
@@ -24,14 +24,14 @@ export default function Comps() {
       setSymbols(symbolsStored);
     } catch (error) {
       setError(error.message);
-      localStorage.setItem("symbols", JSON.stringify([]));
+      localStorage.setItem("comps", JSON.stringify([]));
     } finally {
       setLoading(false);
     }
   }, []);
 
   const setAndPersistSymbols = (symbols) => {
-    localStorage.setItem("symbols", JSON.stringify(symbols));
+    localStorage.setItem("comps", JSON.stringify(symbols));
     setSymbols(symbols);
   };
 
@@ -68,10 +68,7 @@ export default function Comps() {
 
   const handleDelete = (i) => {
     setData([...data.slice(0, i), ...data.slice(i + 1, data.length)]);
-    setAndPersistSymbols([
-      ...symbols.slice(0, i),
-      ...symbols.slice(i + 1, symbols.length),
-    ]);
+    setAndPersistSymbols([...symbols.slice(0, i), ...symbols.slice(i + 1)]);
   };
 
   const Cell = (row) => <div className="text-center">{row.value}</div>;

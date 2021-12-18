@@ -104,7 +104,6 @@ export default function List() {
       },
       { symbol: { sym: "^N225", mode: "standard" }, desc: "Nikkei 225" },
       { symbol: { sym: "^FTSE", mode: "standard" }, desc: "FTSE 1000" },
-      { symbol: { sym: "^KS11", mode: "standard" }, desc: "KOSPI Composite" },
     ],
     currencies: [
       { symbol: { sym: "6E=F", mode: "standard" }, desc: "Euro" },
