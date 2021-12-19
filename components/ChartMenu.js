@@ -63,7 +63,7 @@ export default function ChartMenu({
           <input
             type="checkbox"
             checked={movingAverage}
-            onClick={() => setMovingAverage(!movingAverage)}
+            onChange={() => setMovingAverage(!movingAverage)}
           />
           &nbsp;Mov Avgs
         </div>

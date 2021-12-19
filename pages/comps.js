@@ -14,8 +14,7 @@ export default function Comps() {
 
   React.useEffect(async () => {
     try {
-      const symbolsStored = JSON.parse(localStorage.getItem("comps"));
-      console.log("stored:" + symbolsStored);
+      const symbolsStored = JSON.parse(localStorage.getItem("comps")) ?? [];
       setLoading(true);
       const data = await Promise.all(
         symbolsStored.map((symbol) => fetchAndParseData(symbol))

@@ -12,10 +12,9 @@ export default function Custom() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     try {
-      const symbolsStored = JSON.parse(localStorage.getItem("watchlist"));
-      console.log("stored:" + symbolsStored);
+      const symbolsStored = JSON.parse(localStorage.getItem("watchlist")) ?? [];
       setLoading(true);
       setSymbols(symbolsStored);
     } catch (error) {
@@ -93,6 +92,7 @@ export default function Custom() {
             Your watchlist is empty. Add some symbols!
           </div>
         )}
+        {error && <div>{error}</div>}
       </div>
     </Layout>
   );
