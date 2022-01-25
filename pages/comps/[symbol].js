@@ -37,7 +37,11 @@ export async function getServerSideProps(context) {
     return ret;
   };
   const data = await fetch(
-    `http://localhost:3000/api/comps/${context.params.symbol}`
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://bloomburger.co"
+    }/api/comps/${context.params.symbol}`
   )
     .then((res) => res.json())
     .then((json) => {
