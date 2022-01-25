@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Alert, Container, Form, Row, Spinner } from "react-bootstrap";
-import Layout from "../components/Layout";
-import Table from "../components/Table";
-import { numberFormat } from "../utils";
+import Layout from "../../components/Layout";
+import Table from "../../components/Table";
+import { numberFormat } from "../../utils";
 import { round } from "lodash";
 
 export default function Comps() {
@@ -97,14 +97,6 @@ export default function Comps() {
       ],
     },
     {
-      Header: "LFY Multiples",
-      columns: [
-        { Header: "P/S", accessor: "priceToSalesLFY" },
-        { Header: "P/GP", accessor: "priceToGrossProfitLFY" },
-        { Header: "P/E", accessor: "priceToEarningsLFY" },
-      ],
-    },
-    {
       Header: "Growth YoY",
       columns: [
         { Header: "Revenue", accessor: "revenueGrowth" },
@@ -180,26 +172,19 @@ export default function Comps() {
 }
 
 const fetchAndParseData = async (symbol) => {
-  const sumAcrossObjects = (accum, curr) => {
+  const objectSummer = (accum, curr) => {
     for (let key in accum) {
-      if (key !== "endDate" && accum[key] !== 0) {
+      if (typeof curr[key] === "number") {
         accum[key] += curr[key];
-      }
-      if (typeof accum[key] !== "number") {
-        accum[key] = 0;
+      } else if (key !== "endDate") {
+      } else {
+        accum[key] = NaN;
       }
     }
     return accum;
   };
 
-  const mergeObjects = (accum, curr) => {
-    for (let key in curr) {
-      accum[key] = curr[key];
-    }
-    return accum;
-  };
-
-  const addKeySuffix = (obj, suffix) => {
+  const suffixKeys = (obj, suffix) => {
     const suffixed = {};
     for (let key in obj) {
       suffixed[`${key}${suffix}`] = obj[key];
@@ -207,15 +192,7 @@ const fetchAndParseData = async (symbol) => {
     return suffixed;
   };
 
-  const getRaw = (obj, field) => {
-    try {
-      return obj[field].raw;
-    } catch {
-      return "err";
-    }
-  };
-
-  const incomeStatementSchema = (obj) => {
+  const incomeStatementParser = (obj) => {
     const fields = [
       "endDate",
       "totalRevenue",
@@ -226,7 +203,7 @@ const fetchAndParseData = async (symbol) => {
     ];
     const ret = { endDate: obj.endDate.fmt };
     fields.forEach((field) => {
-      ret[field] = getRaw(obj, field);
+      ret[field] = obj[field].raw;
     });
     return ret;
   };
@@ -234,7 +211,7 @@ const fetchAndParseData = async (symbol) => {
   return fetch(`/api/comps/${symbol}`)
     .then((res) => res.json())
     .then((json) => {
-      if (json?.error) {
+      if (json.error) {
         throw new Error(error.code);
       }
       const {
@@ -246,14 +223,16 @@ const fetchAndParseData = async (symbol) => {
 
       const incomeStatementAnnual =
         incomeStatementHistory.incomeStatementHistory
-          .map(incomeStatementSchema)
-          .map((obj, i) => addKeySuffix(obj, i))
-          .reduce(mergeObjects);
+          .map(incomeStatementParser)
+          .map((obj, i) => suffixKeys(obj, i))
+          .reduce((curr, prev) => {
+            return { ...curr, ...prev };
+          });
 
-      const incomeStatementTTM = addKeySuffix(
+      const incomeStatementTTM = suffixKeys(
         incomeStatementHistoryQuarterly.incomeStatementHistory
-          .map(incomeStatementSchema)
-          .reduce(sumAcrossObjects),
+          .map(incomeStatementParser)
+          .reduce(objectSummer),
         "TTM"
       );
 
@@ -275,36 +254,33 @@ const fetchAndParseData = async (symbol) => {
         operatingIncome0,
       } = incomeStatementAnnual;
 
-      const data = {
+      const result = {
         symbol: symbol.toUpperCase(),
         name: price.longName,
         sector: summaryProfile.sector,
         industry: summaryProfile.industry,
         revenueGrowth: round((totalRevenue0 * 100) / totalRevenue1) - 100 + "%",
         earningsGrowth: round((netIncome0 * 100) / netIncome1) - 100 + "%",
-        grossMarginTTM: round((grossProfitTTM * 100) / totalRevenueTTM) + "%",
-        grossMargin0: round((grossProfit0 * 100) / totalRevenue0) + "%",
+
         priceToSalesTTM: round(marketCap / totalRevenueTTM, 1),
         priceToGrossProfitTTM: round(marketCap / grossProfitTTM, 1),
         priceToEarningsTTM: round(marketCap / netIncomeTTM, 1),
-        priceToSalesLFY: round(marketCap / totalRevenue0, 1),
-        priceToGrossProfitLFY: round(marketCap / grossProfit0, 1),
-        priceToEarningsLFY: round(marketCap / netIncome0, 1),
+
         marketCap: numberFormat(marketCap),
+
         totalRevenue0: numberFormat(totalRevenue0),
-        totalRevenue1: numberFormat(totalRevenue1),
         grossProfit0: numberFormat(grossProfit0),
+        grossMargin0: round((grossProfit0 * 100) / totalRevenue0) + "%",
         operatingIncome0: numberFormat(operatingIncome0),
         netIncome0: numberFormat(netIncome0),
-        netIncome1: numberFormat(netIncome1),
-        grossProfitTTM: numberFormat(grossProfitTTM),
+
         totalRevenueTTM: numberFormat(totalRevenueTTM),
-        netIncomeTTM: numberFormat(netIncomeTTM),
+        grossProfitTTM: numberFormat(grossProfitTTM),
+        grossMarginTTM: round((grossProfitTTM * 100) / totalRevenueTTM) + "%",
         operatingIncomeTTM: numberFormat(operatingIncomeTTM),
+        netIncomeTTM: numberFormat(netIncomeTTM),
       };
 
-      console.log(data);
-
-      return data;
+      return result;
     });
 };
