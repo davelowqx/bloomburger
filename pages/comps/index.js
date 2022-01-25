@@ -2,8 +2,8 @@ import React from "react";
 import { Button, Alert, Container, Form, Row, Spinner } from "react-bootstrap";
 import Layout from "../../components/Layout";
 import Table from "../../components/Table";
-import { numberFormat } from "../../utils";
 import { round } from "lodash";
+import { numberFormat } from "../../utils";
 
 export default function Comps() {
   const [data, setData] = React.useState([]);
@@ -17,7 +17,7 @@ export default function Comps() {
       const symbolsStored = JSON.parse(localStorage.getItem("comps")) ?? [];
       setLoading(true);
       const data = await Promise.all(
-        symbolsStored.map((symbol) => fetchAndParseData(symbol))
+        symbolsStored.map((symbol) => fetchData(symbol))
       );
       setData(data);
       setSymbols(symbolsStored);
@@ -53,7 +53,7 @@ export default function Comps() {
     setInput("");
     try {
       const addlData = await Promise.all(
-        addlSymbols.map((symbol) => fetchAndParseData(symbol))
+        addlSymbols.map((symbol) => fetchData(symbol))
       );
       setData([...data, ...addlData]);
       const newSymbols = [...symbols, ...addlSymbols];
@@ -171,116 +171,36 @@ export default function Comps() {
   );
 }
 
-const fetchAndParseData = async (symbol) => {
-  const objectSummer = (accum, curr) => {
-    for (let key in accum) {
-      if (typeof curr[key] === "number") {
-        accum[key] += curr[key];
-      } else if (key !== "endDate") {
-      } else {
-        accum[key] = NaN;
-      }
-    }
-    return accum;
-  };
-
-  const suffixKeys = (obj, suffix) => {
-    const suffixed = {};
-    for (let key in obj) {
-      suffixed[`${key}${suffix}`] = obj[key];
-    }
-    return suffixed;
-  };
-
-  const incomeStatementParser = (obj) => {
-    const fields = [
-      "endDate",
-      "totalRevenue",
-      "grossProfit",
-      "operatingIncome",
-      "ebit",
-      "netIncome",
-    ];
-    const ret = { endDate: obj.endDate.fmt };
-    fields.forEach((field) => {
-      ret[field] = obj[field].raw;
-    });
-    return ret;
-  };
-
-  return fetch(`/api/comps/${symbol}`)
+const fetchData = async (symbol) => {
+  const result = await fetch(`/api/comps/${symbol}`)
     .then((res) => res.json())
     .then((json) => {
       if (json.error) {
         throw new Error(error.code);
       }
-      const {
-        price,
-        summaryProfile,
-        incomeStatementHistoryQuarterly,
-        incomeStatementHistory,
-      } = json;
+      return {
+        ...json,
+        revenueGrowth: round(100 * json.revenueGrowth) + "%",
+        earningsGrowth: round(100 * json.earningsGrowth) + "%",
 
-      const incomeStatementAnnual =
-        incomeStatementHistory.incomeStatementHistory
-          .map(incomeStatementParser)
-          .map((obj, i) => suffixKeys(obj, i))
-          .reduce((curr, prev) => {
-            return { ...curr, ...prev };
-          });
+        priceToSalesTTM: round(json.priceToSalesTTM, 1),
+        priceToGrossProfitTTM: round(json.priceToGrossProfitTTM, 1),
+        priceToEarningsTTM: round(json.priceToEarningsTTM, 1),
 
-      const incomeStatementTTM = suffixKeys(
-        incomeStatementHistoryQuarterly.incomeStatementHistory
-          .map(incomeStatementParser)
-          .reduce(objectSummer),
-        "TTM"
-      );
+        marketCap: numberFormat(json.marketCap),
 
-      const marketCap = price.marketCap.raw;
+        totalRevenue0: numberFormat(json.totalRevenue0),
+        grossProfit0: numberFormat(json.grossProfit0),
+        grossMargin0: round(100 * json.grossMargin0) + "%",
+        operatingIncome0: numberFormat(json.operatingIncome0),
+        netIncome0: numberFormat(json.netIncome0),
 
-      const {
-        grossProfitTTM,
-        totalRevenueTTM,
-        netIncomeTTM,
-        operatingIncomeTTM,
-      } = incomeStatementTTM;
-
-      const {
-        totalRevenue0,
-        totalRevenue1,
-        grossProfit0,
-        netIncome0,
-        netIncome1,
-        operatingIncome0,
-      } = incomeStatementAnnual;
-
-      const result = {
-        symbol: symbol.toUpperCase(),
-        name: price.longName,
-        sector: summaryProfile.sector,
-        industry: summaryProfile.industry,
-        revenueGrowth: round((totalRevenue0 * 100) / totalRevenue1) - 100 + "%",
-        earningsGrowth: round((netIncome0 * 100) / netIncome1) - 100 + "%",
-
-        priceToSalesTTM: round(marketCap / totalRevenueTTM, 1),
-        priceToGrossProfitTTM: round(marketCap / grossProfitTTM, 1),
-        priceToEarningsTTM: round(marketCap / netIncomeTTM, 1),
-
-        marketCap: numberFormat(marketCap),
-
-        totalRevenue0: numberFormat(totalRevenue0),
-        grossProfit0: numberFormat(grossProfit0),
-        grossMargin0: round((grossProfit0 * 100) / totalRevenue0) + "%",
-        operatingIncome0: numberFormat(operatingIncome0),
-        netIncome0: numberFormat(netIncome0),
-
-        totalRevenueTTM: numberFormat(totalRevenueTTM),
-        grossProfitTTM: numberFormat(grossProfitTTM),
-        grossMarginTTM: round((grossProfitTTM * 100) / totalRevenueTTM) + "%",
-        operatingIncomeTTM: numberFormat(operatingIncomeTTM),
-        netIncomeTTM: numberFormat(netIncomeTTM),
+        totalRevenueTTM: numberFormat(json.totalRevenueTTM),
+        grossProfitTTM: numberFormat(json.grossProfitTTM),
+        grossMarginTTM: round(100 * json.grossMargin0) + "%",
+        operatingIncomeTTM: numberFormat(json.operatingIncomeTTM),
+        netIncomeTTM: numberFormat(json.netIncomeTTM),
       };
-
-      return result;
     });
+  return result;
 };
