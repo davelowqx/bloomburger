@@ -144,13 +144,13 @@ export default function Page({ data }) {
   return (
     <table>
       <tr>
-        {columns.map(({ Header, accessor }) => (
-          <td>{Header}</td>
+        {columns.map(({ Header, accessor }, i) => (
+          <td key={i}>{Header}</td>
         ))}
       </tr>
       <tr>
-        {columns.map(({ Header, accessor }) => (
-          <td>{data[accessor]}</td>
+        {columns.map(({ Header, accessor }, i) => (
+          <td key={i}>{data[accessor]}</td>
         ))}
       </tr>
     </table>
