@@ -26,7 +26,6 @@ const incomeStatementParser = (obj) => {
     "totalRevenue",
     "grossProfit",
     "operatingIncome",
-    "ebit",
     "netIncome",
   ];
   const ret = { endDate: obj.endDate.fmt };
@@ -71,9 +70,7 @@ export default async function handler(req, res) {
         incomeStatementHistory.incomeStatementHistory
           .map(incomeStatementParser)
           .map((obj, i) => suffixKeys(obj, i))
-          .reduce((curr, prev) => {
-            return { ...curr, ...prev };
-          });
+          .reduce((curr, prev) => ({ ...curr, ...prev }));
 
       const incomeStatementTTM = suffixKeys(
         incomeStatementHistoryQuarterly.incomeStatementHistory
@@ -106,11 +103,12 @@ export default async function handler(req, res) {
         sector: summaryProfile.sector,
         industry: summaryProfile.industry,
         revenueGrowth: totalRevenue0 / totalRevenue1 - 1,
-        earningsGrowth: netIncome0 / netIncome1 - 1,
+        earningsGrowth:
+          netIncome0 > 0 && netIncome1 > 0 ? netIncome0 / netIncome1 - 1 : NaN,
 
         priceToSalesTTM: marketCap / totalRevenueTTM,
         priceToGrossProfitTTM: marketCap / grossProfitTTM,
-        priceToEarningsTTM: marketCap / netIncomeTTM,
+        priceToEarningsTTM: netIncomeTTM > 0 ? marketCap / netIncomeTTM : NaN,
 
         marketCap,
 
