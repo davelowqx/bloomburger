@@ -24,12 +24,11 @@ export default function ChartMenu({
             "4h",
             "1d",
             "1wk",
-            "1mo",
-            "3mo",
+            "1mo"
           ].map((t, i) => (
             <button
               key={i}
-              style={{ width: "10%", height: "1.5rem" }}
+              style={{ width: "11.11%", height: "1.5rem" }}
               className={`text-white border-1  ${
                 interval === t ? "bg-blue" : "bg-gray"
               }`}
