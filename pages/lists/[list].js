@@ -181,9 +181,9 @@ export default function List() {
         movingAverage={movingAverage}
         setMovingAverage={setMovingAverage}
       />
-      <div className="bg-gray-dark text-white py-3 d-flex">
+      <div className="bg-gray-dark text-white py-3 d-flex" style={{ flexWrap: "wrap" }}>
         {lists[list]?.map(({ symbol, desc }, i) => (
-          <div key={i} style={{ flex: "0 0 49vw"}}>
+          <div key={i} style={{ flexBasis: "50%"}}>
               <h6>{desc}</h6>
               <div
                 className="w-100"
