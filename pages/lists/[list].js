@@ -181,12 +181,12 @@ export default function List() {
         movingAverage={movingAverage}
         setMovingAverage={setMovingAverage}
       />
-      <div className="bg-gray-dark text-white pt-3 d-flex">
+      <div className="bg-gray-dark text-white py-3 d-flex">
         {lists[list]?.map(({ symbol, desc }, i) => (
-          <div key={i}>
+          <div key={i} style={{ flex: "1 1 49vw"}}>
               <h6>{desc}</h6>
               <div
-                className="w-50 d-flex justify-content-center align-items-center "
+                className="w-100"
                 style={{ height: "40vh" }}
               >
                 <ChartData
