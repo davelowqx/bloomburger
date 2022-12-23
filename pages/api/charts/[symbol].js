@@ -9,14 +9,21 @@ async function fetchData(symbol, interval, range) {
   if (error) throw new Error(JSON.stringify(error));
 
   const { timestamp, indicators } = result[0];
-  return timestamp.map((t, i) => ({
-            time: t,
-            open: indicators.quote[0].open[i],
-            high: indicators.quote[0].high[i],
-            low: indicators.quote[0].low[i],
-            close: indicators.quote[0].close[i],
-            value: indicators.quote[0].close[i],
-          }))
+  const quote = indicators.quote[0];
+  const result = []
+  for (i in timestamp) {
+    if (timestamp[i] && quote.open[i] && quote.high[i] && quote.low[i] && quote.close[i]) {
+      result.append({
+          time: timestamp[i],
+          open: quote.open[i],
+          high: quote.high[i],
+          low: quote.low[i],
+          close: quote.close[i],
+          value: quote.close[i],
+        })
+      }
+  };
+  return result;
 }
 
 const parseBinaryData = (a, b, op) => {
