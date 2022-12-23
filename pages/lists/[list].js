@@ -183,8 +183,7 @@ export default function List() {
       />
       <div className="bg-gray-dark text-white py-3 d-flex" style={{ flexWrap: "wrap" }}>
         {lists[list]?.map(({ symbol, desc }, i) => (
-          <div key={i} style={{ flexBasis: "50%"}}>
-              <h6>{desc}</h6>
+          <div key={i} style={{ flex: "1 0 49%" }}>
               <div
                 className="w-100"
                 style={{ height: "40vh" }}
