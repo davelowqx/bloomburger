@@ -24,7 +24,7 @@ export default function Home() {
       />
       <div className="w-100" style={{ height: "calc(100% - 7rem)" }}>
         <ChartData
-          symbol={{ sym: symbol, mode: "standard" }}
+          symbol={symbol}
           interval={interval}
           chartType={chartType}
           movingAverage={movingAverage}

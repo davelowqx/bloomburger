@@ -74,7 +74,7 @@ export default function Custom() {
                   style={{ height: "83vh" }}
                 >
                   <ChartData
-                    symbol={{ sym: symbol, mode: "standard" }}
+                    symbol={symbol}
                     interval={interval}
                     chartType={chartType}
                     movingAverage={movingAverage}

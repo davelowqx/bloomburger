@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchData, parseAdrData, parseBinaryData } from "./db";
+import { fetchData, parseBinaryData } from "./db";
 
 import dynamic from "next/dynamic";
 
@@ -17,15 +17,11 @@ export default function ChartData({
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [error, setError] = React.useState("");
-  const [symbolMemo, setSymbolMemo] = React.useState(symbol);
-
-  React.useEffect(() => {
-    if (JSON.stringify(symbol) !== JSON.stringify(symbolMemo)) {
-      setSymbolMemo(symbol);
-    }
-  }, [symbol]);
 
   React.useEffect(async () => {
+    const tokens = symbol.split(/[\+\-\*\/]/);
+    if (tokens.length > 2) return;
+
     const range = ["1m"].includes(interval)
       ? "7d"
       : ["5m", "15m", "30m"].includes(interval)
@@ -37,36 +33,28 @@ export default function ChartData({
       : ["1mo"].includes(interval)
       ? "20y"
       : "";
-    console.log(`fetching ${JSON.stringify(symbol)}`);
     setLoading(true);
     setError(null);
+
+    let result = [];
     try {
-      let result;
-      switch (symbol.mode) {
-        case "standard":
-          result = await fetchData(symbol.sym, interval, range);
+      if (tokens.length == 1) { 
+          result = await fetchData(tokens[0], interval, range);
           break;
-        case "adr":
-          const adrData = await fetchData(symbol.adr, interval, range);
-          const ordData = await fetchData(symbol.ord, interval, range);
-          const fxData = await fetchData(symbol.fx, interval, range);
-          result = parseAdrData(adrData, ordData, fxData, symbol.r);
+      } else {
+          const first = await fetchData(tokens[0], interval, range);
+          const second = await fetchData(tokens[1], interval, range);
+          result = parseBinaryData(first, second, symbol.charAt(tokens[0].length));
           break;
-        case "binary":
-          const adata = await fetchData(symbol.a, interval, range);
-          const bdata = await fetchData(symbol.b, interval, range);
-          result = parseBinaryData(adata, bdata, symbol.op);
-          break;
-        default:
-          result = [];
       }
       setData(result);
     } catch (err) {
       setError(err.message);
     } finally {
+      setData(result);
       setLoading(false);
     }
-  }, [interval, symbolMemo]);
+  }, [interval, symbol]);
 
   return (
     <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-gray text-white">
@@ -76,17 +64,10 @@ export default function ChartData({
           data={data}
           chartType={chartType}
           movingAverage={movingAverage}
-          text={`${title ? title + " | " : ""}${
-            symbol.mode === "standard"
-              ? symbol.sym
-              : symbol.mode === "adr"
-              ? symbol.adr + " ∪ " + symbol.ord
-              : symbol.mode === "binary"
-              ? symbol.a + symbol.op + symbol.b
-              : "???"
-            } (${["1d", "5d", "1wk", "1mo", "3mo"].includes(interval)
-                  ? interval.substring(0, 2).toUpperCase()
-                  : interval
+          text={`${title ? title + " | " : ""}${symbol} (${
+                ["1d", "5d", "1wk", "1mo", "3mo"].includes(interval)
+                      ? interval.substring(0, 2).toUpperCase()
+                      : interval
             })`}
         />
       )}

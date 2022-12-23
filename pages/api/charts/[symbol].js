@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const { symbol, interval, range } = req.query;
 
   await fetch(
-    `${process.env.API_ENDPOINT}/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=${interval}&range=${range}`
+    `${process.env.API_ENDPOINT}/v8/finance/chart/${symbol}?includeAdjustedClose=false&interval=${interval == "4h" ? "1h" : interval}&range=${range}`
   )
     .then((res) => res.json())
     .then((json) => {

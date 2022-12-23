@@ -8,21 +8,12 @@ export default function InputMenu({ callback }) {
 
   const handleSearchDebounced = React.useCallback(
     debounce((q) => {
-      // console.log("searching:" + q);
-      if (q) {
-        fetch(`/api/search?q=${q}`)
-          .then((res) => res.json())
-          .then(setSearchResults);
-      }
+      fetch(`/api/search?q=${q}`)
+        .then((res) => res.json())
+        .then(setSearchResults);
     }, 500),
     []
   );
-
-  React.useEffect(() => {
-    if (!field) {
-      setSearchResults([]);
-    }
-  }, [field]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,6 +21,7 @@ export default function InputMenu({ callback }) {
       callback(field);
     }
     setField("");
+    setSearchResults([]);
   };
 
   return (
@@ -46,13 +38,13 @@ export default function InputMenu({ callback }) {
             placeholder={`Symbol`}
             value={field}
             onChange={(event) => {
-              const query = event.target.value.trim().toUpperCase();
-              setField(query);
-              handleSearchDebounced(query);
+              const q = event.target.value.trim().toUpperCase();
+              setField(q);
+              q ? handleSearchDebounced(q) : setSearchResults([]);
             }}
           />
         </Form>
-        {!!searchResults.length && (
+        {searchResults.length > 0 && (
           <div
             className="bg-gray-dark col-3 position-absolute start-0"
             style={{
@@ -66,9 +58,9 @@ export default function InputMenu({ callback }) {
                 key={i}
                 className="hover-bg-gray d-flex"
                 onClick={() => {
-                  setField(symbol);
                   callback(symbol);
                   setField("");
+                  setSearchResults([])
                 }}
               >
                 <div className="col-2 py-1 px-2">{`${
