@@ -40,12 +40,10 @@ export default function ChartData({
     try {
       if (tokens.length == 1) { 
           result = await fetchData(tokens[0], interval, range);
-          break;
       } else {
           const first = await fetchData(tokens[0], interval, range);
           const second = await fetchData(tokens[1], interval, range);
           result = parseBinaryData(first, second, symbol.charAt(tokens[0].length));
-          break;
       }
       setData(result);
     } catch (err) {
