@@ -43,8 +43,7 @@ export default function ChartData({
       const data = await fetch(
         `/api/charts/${encodeURIComponent(symbol)}?interval=${interval}&range=${range}`
       ).then((res) => res.json());
-      if (data?.error) throw new Error(`${symbol}: ${error}`);
-      setData(data);
+      data?.error ?  setError(`${symbol}: ${error}`) : setData(data);
     } catch (err) {
       setError(err.message);
     } 

@@ -11,8 +11,8 @@ async function fetchData(symbol, interval, range) {
   const { timestamp, indicators } = result[0];
   const quote = indicators.quote[0];
   const ret = []
-  for (i in timestamp) {
-    if (timestamp[i] && quote.open[i] && quote.high[i] && quote.low[i] && quote.close[i]) {
+  for (let i in timestamp) {
+    if (timestamp[i] != null && quote.open[i] != null && quote.high[i] != null && quote.low[i] != null && quote.close[i] != null) {
       ret.push({
           time: timestamp[i],
           open: quote.open[i],
@@ -89,6 +89,6 @@ export default async function handler(req, res) {
     return res.status(200).json(result);
 
   } catch (e) {
-    return res.status(400).json({error: e.message});
+    return res.status(400).json({ error: e.message });
   }
 }
