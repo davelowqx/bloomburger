@@ -81,8 +81,8 @@ export default async function handler(req, res) {
     if (tokens.length == 1) {
       result = await fetchData(s, interval, range);
     } else {
-      let first = fetchData(tokens[0], interval, range)
-      let second = fetchData(tokens[1], interval, range)
+      let first = await fetchData(tokens[0], interval, range)
+      let second = await fetchData(tokens[1], interval, range)
       result = parseBinaryData(first, second, s.charAt(tokens[0].length));
     }
 
