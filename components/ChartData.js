@@ -76,18 +76,17 @@ export default function ChartData({
           data={data}
           chartType={chartType}
           movingAverage={movingAverage}
-          text={`${title ? title + " | " : ""} 
-            ${symbol.mode === "standard"
+          text={`${title ? title + " | " : ""}${
+            symbol.mode === "standard"
               ? symbol.sym
               : symbol.mode === "adr"
               ? symbol.adr + " ∪ " + symbol.ord
               : symbol.mode === "binary"
               ? symbol.a + symbol.op + symbol.b
               : "???"
-            }
-          (${["1d", "5d", "1wk", "1mo", "3mo"].includes(interval)
-                ? interval.substring(0, 2).toUpperCase()
-                : interval
+            } (${["1d", "5d", "1wk", "1mo", "3mo"].includes(interval)
+                  ? interval.substring(0, 2).toUpperCase()
+                  : interval
             })`}
         />
       )}
