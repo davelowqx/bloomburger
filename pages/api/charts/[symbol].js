@@ -12,7 +12,7 @@ async function fetchData(symbol, interval, range) {
   const quote = indicators.quote[0];
   const ret = []
   for (let i in timestamp) {
-    if (timestamp[i] != null && quote.open[i] != null && quote.high[i] != null && quote.low[i] != null && quote.close[i] != null) {
+    if (timestamp[i] !== null && quote.open[i] !== null && quote.high[i] !== null && quote.low[i] !== null && quote.close[i] !== null) {
       ret.push({
           time: timestamp[i],
           open: quote.open[i],
@@ -29,10 +29,10 @@ async function fetchData(symbol, interval, range) {
 const parseBinaryData = (a, b, op) => {
   const data = [];
 
-  const bm = b.reduce((accum, curr) => {
-    accum[curr.time] = curr;
-    return accum;
-  }, {});
+  const bm = {}
+  for (let elem of b) {
+    bm[elem.time] = elem;
+  }
 
   const f = (x, y) =>
     op === "/"
@@ -46,7 +46,7 @@ const parseBinaryData = (a, b, op) => {
       : null;
 
   for (let elem of a) {
-    if (bm[elem.time]) {
+    if (bm[elem.time] !== undefined) {
       const open = f(elem.open, bm[elem.time].open);
       const close = f(elem.close, bm[elem.time].close);
       data.push({
