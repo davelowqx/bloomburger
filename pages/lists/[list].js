@@ -11,14 +11,7 @@ export default function List() {
   const [interval, setInterval] = React.useState("1d");
   const [chartType, setChartType] = React.useState("candlestick");
   const [movingAverage, setMovingAverage] = React.useState(false);
-  const [timeRange, setTimeRange] = React.useState({ from: 0, to: 0 });
 
-  const setTimeRangeThrottled = debounce(({ from, to }) => {
-    setTimeRange({
-      from: from - (from % (24 * 3600)),
-      to: to - (to % (24 * 3600)),
-    });
-  }, 1000);
   const lists = {
     ussectors: [
       { symbol: { sym: "XLE", mode: "standard" }, desc: "Energy" },
@@ -84,7 +77,6 @@ export default function List() {
       { symbol: { sym: "^GSPC", mode: "standard" }, desc: "S&P 500" },
       { symbol: { sym: "^RUT", mode: "standard" }, desc: "Russell 2000" },
       { symbol: { sym: "^DJI", mode: "standard" }, desc: "Dow Jones 30" },
-      { symbol: { sym: "^IXIC", mode: "standard" }, desc: "Nasdaq Composite" },
       { symbol: { sym: "^TNX", mode: "standard" }, desc: "US10Y" },
       {
         symbol: { sym: "^VIX", mode: "standard" },
@@ -149,7 +141,6 @@ export default function List() {
     crypto: [
       { symbol: { sym: "BTC-USD", mode: "standard" }, desc: "Bitcoin" },
       { symbol: { sym: "ETH-USD", mode: "standard" }, desc: "Ethereum" },
-      { symbol: { sym: "SOL1-USD", mode: "standard" }, desc: "Solana" },
       { symbol: { sym: "DOGE-USD", mode: "standard" }, desc: "Dogecoin" },
     ],
     ratios: [
@@ -168,10 +159,6 @@ export default function List() {
       {
         symbol: { mode: "binary", a: "IWO", b: "IWN", op: "/" },
         desc: "Russell 2000 Growth / Value",
-      },
-      {
-        symbol: { mode: "binary", a: "XLK", b: "SPY", op: "/" },
-        desc: "S&P 500 Technology Dominance",
       },
       {
         symbol: { mode: "binary", a: "EEM", b: "SPY", op: "/" },
@@ -211,8 +198,6 @@ export default function List() {
                     interval={interval}
                     chartType={chartType}
                     movingAverage={movingAverage}
-                    timeRange={timeRange}
-                    setTimeRange={setTimeRangeThrottled}
                   />
                 </div>
               </div>
