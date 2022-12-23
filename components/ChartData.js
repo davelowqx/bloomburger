@@ -10,11 +10,8 @@ const Chart = dynamic(() => import("./Chart"), {
 export default function ChartData({
   symbol,
   interval = "1d",
-  range = "auto",
   chartType = "candlestick",
   movingAverage = false,
-  timeRange,
-  setTimeRange,
 }) {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
@@ -28,21 +25,17 @@ export default function ChartData({
   }, [symbol]);
 
   React.useEffect(async () => {
-    if (range === "auto") {
-      range = ["1m"].includes(interval)
-        ? "7d"
-        : ["5m", "15m", "30m"].includes(interval)
-        ? "60d"
-        : ["1h", "4h"].includes(interval)
-        ? "730d"
-        : ["1d", "1wk"].includes(interval)
-        ? "10y"
-        : ["1mo"].includes(interval)
-        ? "20y"
-        : ["3mo"].includes(interval)
-        ? "50y"
-        : "";
-    }
+    const range = ["1m"].includes(interval)
+      ? "7d"
+      : ["5m", "15m", "30m"].includes(interval)
+      ? "60d"
+      : ["1h", "4h"].includes(interval)
+      ? "730d"
+      : ["1d", "1wk"].includes(interval)
+      ? "10y"
+      : ["1mo"].includes(interval)
+      ? "20y"
+      : "";
     console.log(`fetching ${JSON.stringify(symbol)}`);
     setLoading(true);
     setError(null);
@@ -95,8 +88,6 @@ export default function ChartData({
               ? interval.substring(0, 2).toUpperCase()
               : interval
           })`}
-          timeRange={timeRange}
-          setTimeRange={setTimeRange}
         />
       )}
       {!loading && error && <div>{error}</div>}
