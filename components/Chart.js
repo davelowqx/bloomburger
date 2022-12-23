@@ -6,8 +6,6 @@ export default function Chart({
   text,
   chartType,
   movingAverage,
-  timeRange,
-  setTimeRange,
 }) {
   const divRef = React.useRef();
   const chartRef = React.useRef();
@@ -66,24 +64,12 @@ export default function Chart({
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    if (setTimeRange) {
-      chartRef.current
-        .timeScale()
-        .subscribeVisibleTimeRangeChange(setTimeRange);
-    }
 
     return () => {
       window.removeEventListener("resize", handleResize);
       chartRef.current.remove();
     };
   }, []);
-
-  React.useEffect(() => {
-    if (!timeRange || !chartRef.current || !seriesRef.current) {
-      return;
-    }
-    chartRef.current.timeScale().setVisibleRange(timeRange);
-  }, [timeRange]);
 
   React.useEffect(() => {
     if (!chartRef.current) {
