@@ -183,7 +183,7 @@ export default function List() {
       />
       <div className="bg-gray-dark text-white py-3 d-flex">
         {lists[list]?.map(({ symbol, desc }, i) => (
-          <div key={i} style={{ flex: "1 1 49vw"}}>
+          <div key={i} style={{ flex: "0 0 49vw"}}>
               <h6>{desc}</h6>
               <div
                 className="w-100"
