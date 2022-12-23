@@ -20,7 +20,6 @@ export default function InputMenu({ callback }) {
     if (field) {
       callback(field);
     }
-    setField("");
     setSearchResults([]);
   };
 
@@ -59,7 +58,6 @@ export default function InputMenu({ callback }) {
                 className="hover-bg-gray d-flex"
                 onClick={() => {
                   callback(symbol);
-                  setField("");
                   setSearchResults([])
                 }}
               >
