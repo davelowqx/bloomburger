@@ -1,6 +1,4 @@
 import React from "react";
-import { fetchData, parseBinaryData } from "./db";
-
 import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("./Chart"), {
@@ -20,7 +18,11 @@ export default function ChartData({
 
   React.useEffect(async () => {
     const tokens = symbol.split(/[\+\-\*\/]/);
-    if (tokens.length > 2) return;
+    if (tokens.length > 2) {
+      setError("Invalid");
+      setData([])
+      return;
+    };
 
     const range = ["1m"].includes(interval)
       ? "7d"
@@ -33,25 +35,21 @@ export default function ChartData({
       : ["1mo"].includes(interval)
       ? "20y"
       : "";
+
     setLoading(true);
     setError(null);
 
-    let result = [];
     try {
-      if (tokens.length == 1) { 
-          result = await fetchData(tokens[0], interval, range);
-      } else {
-          const first = await fetchData(tokens[0], interval, range);
-          const second = await fetchData(tokens[1], interval, range);
-          result = parseBinaryData(first, second, symbol.charAt(tokens[0].length));
-      }
-      setData(result);
+      const data = await fetch(
+        `/api/charts/${symbol}?interval=${interval}&range=${range}`
+      ).then((res) => res.json());
+      if (data?.error) throw new Error(`${symbol}: ${error}`);
+      setData(data);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setData(result);
-      setLoading(false);
-    }
+    } 
+
+    setLoading(false);
   }, [interval, symbol]);
 
   return (
