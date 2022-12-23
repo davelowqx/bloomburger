@@ -38,10 +38,8 @@ export default function Header({ children }) {
             <NavDropdown.Item href={"/lists/custom"}>Custom</NavDropdown.Item>
           </NavDropdown>
           <Nav.Link href={"/comps"}>Comps</Nav.Link>
-          <Nav.Link href={"/adr"}>ADR</Nav.Link>
         </Nav>
         <div className="flex-grow-1" />
-        <Nav.Item>{children}</Nav.Item>
       </Navbar>
     </div>
   );
