@@ -10,10 +10,10 @@ async function fetchData(symbol, interval, range) {
 
   const { timestamp, indicators } = result[0];
   const quote = indicators.quote[0];
-  const result = []
+  const ret = []
   for (i in timestamp) {
     if (timestamp[i] && quote.open[i] && quote.high[i] && quote.low[i] && quote.close[i]) {
-      result.append({
+      ret.append({
           time: timestamp[i],
           open: quote.open[i],
           high: quote.high[i],
@@ -23,7 +23,7 @@ async function fetchData(symbol, interval, range) {
         })
       }
   };
-  return result;
+  return ret;
 }
 
 const parseBinaryData = (a, b, op) => {
