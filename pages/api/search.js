@@ -11,6 +11,6 @@ export default async function handler(req, res) {
     `${process.env.API_ENDPOINT}/v1/finance/search?q=${q}&quotesCount=15&newsCount=0`
   )
     .then((res) => res.json())
-    .then((json) => res.status(200).json(json.quotes.filter(obj => ["PCX", "NYQ", "NMS", "NGM", "OPR", "CME", "CMX", "NYM"].includes(obj.exchange))))
+    .then((json) => res.status(200).json(json.quotes.filter(obj => ["NYQ", "NMS", "NGM", "PCX", "OPR", "CME", "NYM", "CBT"].includes(obj.exchange))))
     .catch((error) => res.status(400).json(error));
 }
