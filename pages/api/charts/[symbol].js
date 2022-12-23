@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   }
 
   const { symbol, interval, range } = req.query;
-  s = decodeURIComponent(symbol);
+  const s = decodeURIComponent(symbol);
 
   const tokens = s.split(/[\+\-\*\/]/);
   if (tokens.length > 2) return res.status(400).json({ error: "Invalid symbol." });
