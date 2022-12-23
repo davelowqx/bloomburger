@@ -58,6 +58,7 @@ export default function InputMenu({ callback }) {
                 className="hover-bg-gray d-flex"
                 onClick={() => {
                   callback(symbol);
+                  setField(symbol);
                   setSearchResults([])
                 }}
               >
