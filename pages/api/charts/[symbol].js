@@ -13,7 +13,7 @@ async function fetchData(symbol, interval, range) {
   const ret = []
   for (i in timestamp) {
     if (timestamp[i] && quote.open[i] && quote.high[i] && quote.low[i] && quote.close[i]) {
-      ret.append({
+      ret.push({
           time: timestamp[i],
           open: quote.open[i],
           high: quote.high[i],
@@ -68,19 +68,20 @@ export default async function handler(req, res) {
   }
 
   const { symbol, interval, range } = req.query;
+  s = decodeURIComponent(symbol);
 
-  const tokens = symbol.split(/[\+\-\*\/]/);
+  const tokens = s.split(/[\+\-\*\/]/);
   if (tokens.length > 2) return res.status(400).json({ error: "Invalid symbol." });
 
   let result = [];
 
   try {
     if (tokens.length == 1) {
-      result = await fetchData(symbol, interval, range);
+      result = await fetchData(s, interval, range);
     } else {
       let first = fetchData(tokens[0], interval, range)
       let second = fetchData(tokens[1], interval, range)
-      result = parseBinaryData(first, second, symbol.charAt(tokens[0].length));
+      result = parseBinaryData(first, second, s.charAt(tokens[0].length));
     }
 
     return res.status(200).json(result);
