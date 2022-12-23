@@ -181,26 +181,20 @@ export default function List() {
         movingAverage={movingAverage}
         setMovingAverage={setMovingAverage}
       />
-      <div className="container-fluid bg-gray-dark text-white pt-3">
+      <div className="bg-gray-dark text-white pt-3 d-flex">
         {lists[list]?.map(({ symbol, desc }, i) => (
           <div key={i}>
-            <div className={"row px-3"}>
               <h6>{desc}</h6>
-            </div>
-            <div className="row">
-              <div className="col-12 mb-3 px-3">
-                <div
-                  className="w-100 d-flex justify-content-center align-items-center "
-                  style={{ height: "83vh" }}
-                >
-                  <ChartData
-                    symbol={symbol}
-                    interval={interval}
-                    chartType={chartType}
-                    movingAverage={movingAverage}
-                  />
-                </div>
-              </div>
+              <div
+                className="w-50 d-flex justify-content-center align-items-center "
+                style={{ height: "40vh" }}
+              >
+                <ChartData
+                  symbol={symbol}
+                  interval={interval}
+                  chartType={chartType}
+                  movingAverage={movingAverage}
+                />
             </div>
           </div>
         ))}
