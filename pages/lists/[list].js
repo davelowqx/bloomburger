@@ -190,6 +190,7 @@ export default function List() {
               >
                 <ChartData
                   symbol={symbol}
+                  title={desc}
                   interval={interval}
                   chartType={chartType}
                   movingAverage={movingAverage}
