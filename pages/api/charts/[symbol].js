@@ -22,11 +22,6 @@ async function fetchData(symbol, interval, range) {
 const parseBinaryData = (a, b, op) => {
   const data = [];
 
-  const am = a.reduce((accum, curr) => {
-    accum[curr.time] = curr;
-    return accum;
-  }, {});
-
   const bm = b.reduce((accum, curr) => {
     accum[curr.time] = curr;
     return accum;
@@ -43,12 +38,12 @@ const parseBinaryData = (a, b, op) => {
       ? x + y
       : null;
 
-  for (let key of Object.keys(am)) {
-    if (bm[key]) {
-      const open = f(am[key].open, bm[key].open);
-      const close = f(am[key].close, bm[key].close);
+  for (let elem of a) {
+    if (bm[elem.time]) {
+      const open = f(elem.open, bm[elem.time].open);
+      const close = f(elem.close, bm[elem.time].close);
       data.push({
-        time: am[key].time,
+        time: elem.time,
         open,
         high: Math.max(open, close),
         low: Math.min(open, close),
@@ -83,7 +78,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json(result);
 
-  } catch {
-    return res.status(400).json(error);
+  } catch (e) {
+    return res.status(400).json({error: e});
   }
 }
