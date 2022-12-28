@@ -9,7 +9,19 @@ export default function InputMenu({ callback }) {
   const [searchResults, setSearchResults] = React.useState([]);
 
   React.useEffect(() => {
-    const keydownListener = e => { if (e.key == "/") inputRef.current?.focus() }
+    const keydownListener = e => { 
+      e.stopProgagation();
+      switch (e.key) {
+        case "/":
+          inputRef.current?.focus(); 
+          break;
+        case "Escape":
+          inputRef.current?.blur();
+          isSearching.current = false;
+          setSearchResults([]);
+          break;
+      }
+    }
     window.addEventListener("keydown", keydownListener);
     return () => {
       window.removeEventListener("keydown");
@@ -27,6 +39,7 @@ export default function InputMenu({ callback }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    inputRef.current?.blur();
     if (field) { callback(field); }
     isSearching.current = false;
     setSearchResults([]);
@@ -75,6 +88,7 @@ export default function InputMenu({ callback }) {
                 onClick={() => {
                   setField(symbol);
                   callback(symbol);
+                  inputRef.current?.blur();
                   isSearching.current = false;
                   setSearchResults([])
                 }}
