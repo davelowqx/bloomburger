@@ -12,7 +12,7 @@ export default function InputMenu({ callback }) {
     const keydownListener = e => { 
       switch (e.key) {
         case "/":
-          e.stopPropagation();
+          e.preventDefault();
           inputRef.current?.focus(); 
           break;
         case "Escape": 
