@@ -8,9 +8,13 @@ export default function InputMenu({ callback }) {
   const [field, setField] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "/") inputRef.current.focus();
-  })
+  React.useEffect(() => {
+    const keydownListener = e => { if (e.key == "/") inputRef.current?.focus() }
+    window.addEventListener("keydown", keydownListener);
+    return () => {
+      window.removeEventListener("keydown");
+    }
+  }, [])
 
   const handleSearchDebounced = React.useCallback(
     debounce((q) => {
