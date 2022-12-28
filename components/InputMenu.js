@@ -10,9 +10,16 @@ export default function InputMenu({ callback }) {
 
   React.useEffect(() => {
     const keydownListener = e => { 
-      if (e.key == "/") {
-        inputRef.current?.focus(); 
-        setField("");
+      switch (e.key) {
+        case "/":
+          e.stopPropagation();
+          inputRef.current?.focus(); 
+          break;
+        case "Escape": 
+          inputRef.current?.blur(); 
+          setField("");
+          isSearching.current = false;
+          setSearchResults([]);
       }
     }
     window.addEventListener("keydown", keydownListener);
