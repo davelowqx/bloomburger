@@ -2,7 +2,7 @@ import React from "react";
 import ChartData from "../components/ChartData";
 import Header from "../components/Layout/Header";
 import ChartMenu from "../components/ChartMenu";
-import InputMenu from "../components/Layout/InputMenu";
+import InputMenu from "../components/InputMenu";
 
 export default function Home() {
   const [symbol, setSymbol] = React.useState("SPY");

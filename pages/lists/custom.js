@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "../../components/Layout";
 import ChartMenu from "../../components/ChartMenu";
 import ChartData from "../../components/ChartData";
-import InputMenu from "../../components/Layout/InputMenu";
+import InputMenu from "../../components/InputMenu";
 
 export default function Custom() {
   const [interval, setInterval] = React.useState("1d");

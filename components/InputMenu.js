@@ -3,23 +3,28 @@ import { Form } from "react-bootstrap";
 import { debounce } from "lodash";
 
 export default function InputMenu({ callback }) {
+  const isSearching = React.useRef(false);
+  const inputRef = React.useRef(null);
   const [field, setField] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") inputRef.current.focus();
+  })
 
   const handleSearchDebounced = React.useCallback(
     debounce((q) => {
       fetch(`/api/search?q=${q}`)
         .then((res) => res.json())
-        .then(setSearchResults);
+        .then((data) => setSearchResults(isSearching.current ? data : []));
     }, 500),
     []
   );
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (field) {
-      callback(field);
-    }
+    if (field) { callback(field); }
+    isSearching.current = false;
     setSearchResults([]);
   };
 
@@ -31,6 +36,7 @@ export default function InputMenu({ callback }) {
       <div className="col-3 px-0">
         <Form onSubmit={handleSubmit}>
           <input
+            ref={inputRef}
             type="text"
             className="bg-yellow w-100 border-1 px-2"
             style={{ height: "2rem", position: "relative" }}
@@ -39,11 +45,17 @@ export default function InputMenu({ callback }) {
             onChange={(event) => {
               const q = event.target.value.trim().toUpperCase();
               setField(q);
-              q ? handleSearchDebounced(q) : setSearchResults([]);
+              if (q) {
+                isSearching.current = true;
+                handleSearchDebounced(q);
+              } else {
+                isSearching.current = false;
+                setSearchResults([])
+              }
             }}
           />
         </Form>
-        {searchResults.length > 0 && (
+        {isSearching.current && searchResults.length > 0 && (
           <div
             className="bg-gray-dark col-3 position-absolute start-0"
             style={{
@@ -57,8 +69,9 @@ export default function InputMenu({ callback }) {
                 key={i}
                 className="hover-bg-gray d-flex"
                 onClick={() => {
-                  callback(symbol);
                   setField(symbol);
+                  callback(symbol);
+                  isSearching.current = false;
                   setSearchResults([])
                 }}
               >
