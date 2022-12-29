@@ -49,9 +49,9 @@ export default function List() {
     ],
 
     globalindices: [
+      { symbol: "^GSPC", desc: "S&P 500" },
       { symbol: "^HSI", desc: "Hang Seng Index" },
       { symbol: "000001.SS", desc: "SSE Composite Index" },
-      { symbol:  "399001.SZ", desc: "SZSE Component Index" },
       { symbol:  "^N225", desc: "Nikkei 225" },
       { symbol:  "^FTSE", desc: "FTSE 1000" },
     ],
@@ -81,7 +81,7 @@ export default function List() {
       { symbol:  "ZS=F", desc: "Soybean" },
     ],
     ratios: [
-      { symbol: "HYG/TLT", desc: "High Yield / Treasuries" },
+      { symbol: "HYG/IEI", desc: "High Yield / Treasuries" },
       { symbol: "EEM/SPY", desc: "Emerging Markets / S&P 500" },
       { symbol: "XLY/XLP", desc: "Discretionary / Staples" },
       { symbol: "IVW/IVE", desc: "S&P 500 Growth / Value" },
