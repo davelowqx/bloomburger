@@ -83,8 +83,6 @@ export default function Comps() {
           Cell,
         },
         { Header: "Name", accessor: "name", Cell },
-        { Header: "Sector", accessor: "sector", Cell },
-        { Header: "Industry", accessor: "industry", Cell },
         { Header: "Market Cap", accessor: "marketCap" },
       ],
     },

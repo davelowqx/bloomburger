@@ -100,8 +100,6 @@ export default async function handler(req, res) {
       return res.status(200).json({
         symbol: symbol.toUpperCase(),
         name: price.longName,
-        sector: summaryProfile.sector,
-        industry: summaryProfile.industry,
         revenueGrowth: totalRevenue0 / totalRevenue1 - 1,
         earningsGrowth:
           netIncome0 > 0 && netIncome1 > 0 ? netIncome0 / netIncome1 - 1 : NaN,

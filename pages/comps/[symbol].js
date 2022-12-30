@@ -13,13 +13,8 @@ export async function getServerSideProps(context) {
 
 export default function Page({ data }) {
   const columns = [
-    {
-      Header: "Symbol",
-      accessor: "symbol",
-    },
+    { Header: "Symbol", accessor: "symbol" },
     { Header: "Name", accessor: "name" },
-    { Header: "Sector", accessor: "sector" },
-    { Header: "Industry", accessor: "industry" },
     { Header: "Market Cap", accessor: "marketCap" },
     { Header: "P/S TTM", accessor: "priceToSalesTTM" },
     { Header: "P/GP TTM", accessor: "priceToGrossProfitTTM" },
